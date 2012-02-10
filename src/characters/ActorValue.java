@@ -6,6 +6,14 @@ public class ActorValue {
 		this.value = value;
 		this.name = name;
 	}
+	
+	public void setValue(int value) {
+		this.value = value;
+	}
+	
+	public int getValue() {
+		return value;
+	}
 
 	private int value;
 	private String name;

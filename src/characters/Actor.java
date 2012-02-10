@@ -1,11 +1,11 @@
 package characters;
 
-import java.util.Date;
-import java.util.Random;
-
 import game.GameMap;
 import game.Item;
 import game.Tile;
+
+import java.util.Date;
+import java.util.Random;
 
 public abstract class Actor {
 
@@ -15,22 +15,50 @@ public abstract class Actor {
 
 	int[] saves = { 1, 2, 3 };
 
-	private Tile currentTile;
+	private int currentTileX, currentTileY;
 
 	private ActorValue strength, intelligence, agility, constitution,
 			luck = new ActorValue("Default", 0);
 
 	private String name;
 
+	class movement {
+		public movement(Actor actor, int direction) {
+			if (direction == DIRECTION_UP) {
 
-	public Actor(String name, int stre, int inte, int agil, int luc,
-			int cons, GameMap map, Tile currentTile) {
+			}
+			for (Tile t : currentMap.getTiles()) {
+				if (t.x == actor.currentTileX
+						&& (direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT)) {
+					switch (direction) {
+					case DIRECTION_RIGHT:
+						actor.setTile(t.x + 1, currentTileY);
+					case DIRECTION_LEFT:
+						actor.setTile(t.x - 1, currentTileY);
+					}
+
+				}
+			}
+
+		}
+	}
+
+	public final int DIRECTION_UP = 0;
+	public final int DIRECTION_RIGHT = 1;
+	public final int DIRECTION_DOWN = 2;
+	public final int DIRECTION_LEFT = 3;
+
+	public Actor(String name, int stre, int inte, int agil, int luc, int cons,
+			GameMap map, Tile currentTile) {
 		this.name = name;
 		strength = new ActorValue("Strength", stre);
 		intelligence = new ActorValue("Intelligence", inte);
 		agility = new ActorValue("Agility", agil);
 		constitution = new ActorValue("Constitution", cons);
 		luck = new ActorValue("Luck", luc);
+	}
+
+	public void Move(int direction) {
 	}
 
 	public int addToInventory(Item item) {
@@ -49,9 +77,14 @@ public abstract class Actor {
 		return inventory;
 	}
 
+	public void setTile(int y, int x) {
+		currentTileX = x;
+		currentTileY = y;
+	}
+
 	public boolean makeSave(int DC) {
 		Random dateRand = new Random(new Date().getTime());
-		double result = (dateRand.nextDouble() * 19);
+		double result = (dateRand.nextDouble() * 19 + 1);
 		return (result > DC);
 	}
 
