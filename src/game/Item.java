@@ -2,15 +2,18 @@ package game;
 
 public class Item {
 
-	private String name = "";
+	private String name = "Default";
+
 	private boolean owned;
 
-	public Item() {
+	private int cost;
 
+	public Item() {
+		this("Default");
 	}
 
 	public Item(String name) {
-
+		this.name = name;
 	}
 
 	public String getName() {

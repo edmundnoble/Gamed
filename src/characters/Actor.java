@@ -1,5 +1,8 @@
 package characters;
 
+import java.util.Date;
+import java.util.Random;
+
 import game.GameMap;
 import game.Item;
 import game.Tile;
@@ -46,9 +49,10 @@ public abstract class Actor {
 		return inventory;
 	}
 
-	public void makeSave() {
-
+	public boolean makeSave(int DC) {
+		Random dateRand = new Random(new Date().getTime());
+		double result = (dateRand.nextDouble() * 19);
+		return (result > DC);
 	}
-
 
 }
