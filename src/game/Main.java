@@ -2,7 +2,6 @@ package game;
 
 import javax.swing.JFrame;
 
-import utils.GameMap;
 
 public class Main {
 
