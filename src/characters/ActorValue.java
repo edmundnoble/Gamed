@@ -2,19 +2,24 @@ package characters;
 
 public class ActorValue {
 
+	private int value;
+
+	private String name;
+
 	public ActorValue(String name, int value) {
 		this.value = value;
 		this.name = name;
 	}
-	
-	public void setValue(int value) {
-		this.value = value;
+
+	public String getName() {
+		return name;
 	}
-	
+
 	public int getValue() {
 		return value;
 	}
 
-	private int value;
-	private String name;
+	public void setValue(int value) {
+		this.value = value;
+	}
 }

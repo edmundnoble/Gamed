@@ -12,6 +12,6 @@ public class GameMap {
 
 
 	public void paint(Graphics g, Tile t) {
-		g.drawImage(t.img, arg1, arg2, null);
+		//g.drawImage(t.img, arg1, arg2, null);
 	}
 }

@@ -22,32 +22,6 @@ public abstract class Actor {
 
 	private String name;
 
-	class movement {
-		public movement(Actor actor, int direction) {
-			if (direction == DIRECTION_UP) {
-
-			}
-			for (Tile t : currentMap.getTiles()) {
-				if (t.x == actor.currentTileX
-						&& (direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT)) {
-					switch (direction) {
-					case DIRECTION_RIGHT:
-						actor.setTile(t.x + 1, currentTileY);
-					case DIRECTION_LEFT:
-						actor.setTile(t.x - 1, currentTileY);
-					}
-
-				}
-			}
-
-		}
-	}
-
-	public final int DIRECTION_UP = 0;
-	public final int DIRECTION_RIGHT = 1;
-	public final int DIRECTION_DOWN = 2;
-	public final int DIRECTION_LEFT = 3;
-
 	public Actor(String name, int stre, int inte, int agil, int luc, int cons,
 			GameMap map, Tile currentTile) {
 		this.name = name;
@@ -56,9 +30,6 @@ public abstract class Actor {
 		agility = new ActorValue("Agility", agil);
 		constitution = new ActorValue("Constitution", cons);
 		luck = new ActorValue("Luck", luc);
-	}
-
-	public void Move(int direction) {
 	}
 
 	public int addToInventory(Item item) {
@@ -77,15 +48,30 @@ public abstract class Actor {
 		return inventory;
 	}
 
-	public void setTile(int y, int x) {
-		currentTileX = x;
-		currentTileY = y;
+	public GameMap getMap() {
+		return currentMap;
+	}
+
+	public int getTileX() {
+		return currentTileX;
+	}
+
+	public int getTileY() {
+		return currentTileY;
 	}
 
 	public boolean makeSave(int DC) {
 		Random dateRand = new Random(new Date().getTime());
 		double result = (dateRand.nextDouble() * 19 + 1);
 		return (result > DC);
+	}
+
+	public void Move(int direction) {
+	}
+
+	public void setTile(int x, int y) {
+		currentTileX = x;
+		currentTileY = y;
 	}
 
 }

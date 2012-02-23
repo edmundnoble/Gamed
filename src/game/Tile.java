@@ -11,13 +11,11 @@ import javax.imageio.ImageIO;
 
 public class Tile {
 
-	public Dimension preferredSize;
+	private Dimension preferredSize;
 	public int x, y, w, h;
 	BufferedImage img = null;
-	public Point center;
-	public Point topLeft;
-	private boolean walkable = true;
-	private boolean destructible = false;
+	private Point center, topLeft;
+	private boolean walkable = true, destructible = false, edge = false;
 
 	public Tile(int x, int y, Graphics2D g, TerrainType terrain) {
 		try {
@@ -33,8 +31,11 @@ public class Tile {
 	}
 
 	public Tile(int x, int y, Graphics2D g, TerrainType terrain,
-			boolean walkable, boolean destructible) {
-
+			boolean walkable, boolean destructible, boolean edge) {
+		this(x, y, g, terrain);
+		this.walkable = walkable;
+		this.destructible = destructible;
+		this.edge = edge;
 	}
 
 	public Dimension getPreferredSize() {
@@ -45,12 +46,12 @@ public class Tile {
 		return destructible;
 	}
 
-	public void setDestructible(boolean destructible) {
-		this.destructible = destructible;
-	}
-
 	public boolean isWalkable() {
 		return walkable;
+	}
+
+	public void setDestructible(boolean destructible) {
+		this.destructible = destructible;
 	}
 
 	public void setWalkable(boolean walkable) {
