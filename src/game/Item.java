@@ -1,10 +1,12 @@
 package game;
 
+import characters.Actor;
+
 public class Item {
 
 	private String name = "Default";
 
-	private boolean owned;
+	private Actor owner;
 
 	private int cost;
 
@@ -13,7 +15,12 @@ public class Item {
 	}
 
 	public Item(String name) {
+		this(name, 0);
+	}
+
+	public Item(String name, int cost) {
 		this.name = name;
+		this.setCost(cost);
 	}
 
 	public String getName() {
@@ -21,14 +28,26 @@ public class Item {
 	}
 
 	public boolean isOwned(Item i) {
-		return owned;
+		if (owner != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public void setOwned(boolean owned) {
-		this.owned = owned;
+	public void setOwner(Actor owner) {
+		this.owner = owner;
+	}
+
+	public int getCost() {
+		return cost;
+	}
+
+	public void setCost(int cost) {
+		this.cost = cost;
 	}
 }

@@ -6,6 +6,10 @@ public class ActorValue {
 
 	private String name;
 
+	public ActorValue() {
+		this("Default", -1);
+	}
+
 	public ActorValue(String name, int value) {
 		this.value = value;
 		this.name = name;

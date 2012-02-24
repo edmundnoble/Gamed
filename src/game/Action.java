@@ -3,7 +3,7 @@ package game;
 import characters.Actor;
 
 public abstract class Action {
-	public enum ActionTypes {
+	static enum ActionTypes {
 		MOVEMENT, ATTACK, ITEMMANIP
 	}
 
@@ -18,6 +18,10 @@ public abstract class Action {
 		this.name = name;
 		this.actor = actor;
 		this.type = type;
+	}
+
+	public Actor getActor() {
+		return actor;
 	}
 
 	public String getName() {
