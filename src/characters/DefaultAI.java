@@ -16,8 +16,9 @@ public class DefaultAI extends AI {
 				for (Actor c : map.getActors()) {
 					int cpos = c.getTileX() + c.getTileY();
 					int apos = a.getTileX() + a.getTileY();
-					if ((c.getTileX() + c.getTileY() < (a.getTileX() + c
-							.getTileY() * 0.8))) {
+					if (cpos + 2 >= apos || cpos - 2 <= apos) {
+						if (Math.abs((c.getTileX() - a.getTileX())) < 3) {
+						}
 					}
 				}
 			}

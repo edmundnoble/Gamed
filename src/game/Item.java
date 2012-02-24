@@ -20,7 +20,11 @@ public class Item {
 
 	public Item(String name, int cost) {
 		this.name = name;
-		this.setCost(cost);
+		this.cost = cost;
+	}
+
+	public int getCost() {
+		return cost;
 	}
 
 	public String getName() {
@@ -35,19 +39,15 @@ public class Item {
 		}
 	}
 
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	public void setOwner(Actor owner) {
 		this.owner = owner;
-	}
-
-	public int getCost() {
-		return cost;
-	}
-
-	public void setCost(int cost) {
-		this.cost = cost;
 	}
 }

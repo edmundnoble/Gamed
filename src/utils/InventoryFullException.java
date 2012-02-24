@@ -1,8 +1,6 @@
 package utils;
 
-
 public class InventoryFullException extends Exception {
-	int a;
 	/**
 		 * 
 		 */
