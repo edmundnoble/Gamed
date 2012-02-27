@@ -18,6 +18,8 @@ public abstract class Actor {
 
 	int[] saves = { 1, 2, 3 };
 
+	public static final int MAXPARTYMEMBERS = 4;
+
 	private Faction faction;
 
 	private int currentTileX, currentTileY;
@@ -28,8 +30,8 @@ public abstract class Actor {
 	private String name;
 
 	public Actor(String name, int stre, int inte, int agil, int luc, int cons,
-			int level, Faction faction, GameMap map, Tile currentTile) {
-		this.name = name;
+			int level, Faction factions, GameMap map, Tile currentTile) {
+		this.setName(name);
 		strength = new ActorValue("Strength", stre);
 		intelligence = new ActorValue("Intelligence", inte);
 		agility = new ActorValue("Agility", agil);
@@ -53,6 +55,14 @@ public abstract class Actor {
 		throw new NoSuchItemException(item.getName());
 	}
 
+	public ActorValue getAgi() {
+		return agility;
+	}
+
+	public ActorValue getCon() {
+		return constitution;
+	}
+
 	public ActorValue getCurrentHP() {
 		return currentHP;
 	}
@@ -61,8 +71,16 @@ public abstract class Actor {
 		return faction;
 	}
 
+	public ActorValue getInt() {
+		return intelligence;
+	}
+
 	public Item[] getInventory() {
 		return inventory;
+	}
+
+	public ActorValue getLuck() {
+		return luck;
 	}
 
 	public GameMap getMap() {
@@ -71,6 +89,14 @@ public abstract class Actor {
 
 	public ActorValue getMaxHP() {
 		return currentHP;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public ActorValue getStr() {
+		return strength;
 	}
 
 	public int getTileX() {
@@ -90,12 +116,26 @@ public abstract class Actor {
 	public void Move(int direction) {
 	}
 
+	public void setAV(String name, int value) {
+		ActorValue[] avs = { strength, agility, constitution, intelligence,
+				luck };
+		for (ActorValue a : avs) {
+			if (a.getName().equalsIgnoreCase(name)) {
+				a.setValue(value);
+			}
+		}
+	}
+
 	public void setFaction(Faction faction) {
 		this.faction = faction;
 	}
 
 	public void setHP(ActorValue HP) {
 		currentHP = HP;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setTile(int x, int y) {

@@ -3,8 +3,8 @@ package game;
 import characters.Actor;
 
 class movement extends Action {
-	public movement(String name, Actor actor) {
-		super(name, ActionTypes.MOVEMENT, actor);
+	public movement(Actor actor) {
+		super(ActionTypes.MOVEMENT, actor);
 
 	}
 

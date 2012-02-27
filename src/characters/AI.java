@@ -10,10 +10,10 @@ public abstract class AI {
 		this.map = map;
 	}
 
-	public Action computeNext() {
+	public Action[] computeNext() {
 		return getNextAction(map);
 	}
 
-	public abstract Action getNextAction(GameMap map);
+	public abstract Action[] getNextAction(GameMap map);
 
 }

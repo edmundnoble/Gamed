@@ -11,8 +11,6 @@ public class Faction {
 
 	private FactionID id;
 
-	int RELATIONS[] = new int[FactionID.values().length];
-
 	public Faction(FactionID id) {
 		this.id = id;
 	}
@@ -22,5 +20,9 @@ public class Faction {
 
 	public Faction(FactionID id, int[] RELATIONS) {
 		this.id = id;
+	}
+
+	public FactionID getID() {
+		return id;
 	}
 }
