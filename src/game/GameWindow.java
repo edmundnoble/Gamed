@@ -1,6 +1,5 @@
-package game;
 
-import game.Window.WindowType;
+package game;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -8,7 +7,8 @@ import javax.swing.JFrame;
 
 public class GameWindow extends JFrame {
 
-	public static final int DEFAULT_WIDTH = 1000, DEFAULT_HEIGHT = 475;
+	public static final int DEFAULT_WIDTH = 1000,
+			DEFAULT_HEIGHT = 475;
 
 	GameMap map;
 	Tile[] tiles;
@@ -17,7 +17,7 @@ public class GameWindow extends JFrame {
 		tiles = new Tile[20];
 		map = new GameMap();
 		setTitle("Game");
-		Window.pane = new ButtonPanel(WindowType.GAME);
+		Window.contentBox = new GameMap();
 
 		// pack();
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -34,7 +34,7 @@ public class GameWindow extends JFrame {
 		// pane.add(endTurnButton);
 		add(map);
 		add(box);
-		add(Window.pane); // add(component);
+		add(Window.contentBox); // add(component);
 		setSize(500, 475);
 		setVisible(true);
 	}

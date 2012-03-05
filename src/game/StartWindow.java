@@ -1,13 +1,13 @@
-package game;
 
-import game.Window.WindowType;
+package game;
 
 import javax.swing.JFrame;
 
 public class StartWindow extends JFrame {
+
 	public StartWindow() {
 		setTitle("Game");
-		Window.pane = new ButtonPanel(WindowType.START);
-		add(Window.pane);
+		Window.contentBox = new GameMap();
+		add(Window.contentBox);
 	}
 }

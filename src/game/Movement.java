@@ -1,36 +1,47 @@
+
 package game;
 
 import characters.Actor;
 
-class movement extends Action {
-	public movement(Actor actor) {
-		super(ActionTypes.MOVEMENT, actor);
+public class Movement extends Action {
 
+
+	public Movement() {
+		super(ActionTypes.MOVEMENT);
 	}
 
-	public void move(Actor actor, int direction) {
 
-		for (Tile t : actor.getMap().getTiles()) {
-			if (t.x == actor.getTileX()
-					&& (direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT)) {
-				switch (direction) {
-					case DIRECTION_RIGHT:
-						actor.setTile(t.x + 1, actor.getTileY());
-						break;
-					case DIRECTION_LEFT:
-						actor.setTile(t.x - 1, actor.getTileY());
-						break;
+	@Override
+	public void act(Actor actor, Direction direction) {
+		switch (direction) {
+			case DIRECTION_UP:
+				if (actor.getTileY() == 9) {
+					actor.setTileY(0);
 				}
-
-			} else if (t.y == actor.getTileX() && direction == DIRECTION_UP
-					|| direction == DIRECTION_DOWN) {
-				switch (direction) {
-					case DIRECTION_DOWN:
-						;
+				else {
+					actor.setTileY(actor.getTileY() + 1);
 				}
-				;
-			}
+			case DIRECTION_DOWN:
+				if (actor.getTileY() == 0) {
+					actor.setTileY(9);
+				}
+				else {
+					actor.setTileY(actor.getTileY() - 1);
+				}
+			case DIRECTION_RIGHT:
+				if (actor.getTileX() == 9) {
+					actor.setTileX(0);
+				}
+				else {
+					actor.setTileX(actor.getTileX() + 1);
+				}
+			case DIRECTION_LEFT:
+				if (actor.getTileX() == 0) {
+					actor.setTileX(9);
+				}
+				else {
+					actor.setTileX(actor.getTileX() - 1);
+				}
 		}
-
 	}
 }

@@ -1,3 +1,4 @@
+
 package characters;
 
 import game.GameMap;
@@ -24,13 +25,14 @@ public abstract class Actor {
 
 	private int currentTileX, currentTileY;
 
-	private ActorValue strength, intelligence, agility, constitution, luck,
-			currentHP, maxHP, level = new ActorValue();
+	private ActorValue strength, intelligence, agility, constitution,
+			luck, currentHP, maxHP, level = new ActorValue();
 
 	private String name;
 
-	public Actor(String name, int stre, int inte, int agil, int luc, int cons,
-			int level, Faction factions, GameMap map, Tile currentTile) {
+	public Actor(String name, int stre, int inte, int agil, int luc,
+			int cons, int level, Faction factions, GameMap map,
+			Tile currentTile) {
 		this.setName(name);
 		strength = new ActorValue("Strength", stre);
 		intelligence = new ActorValue("Intelligence", inte);
@@ -42,13 +44,14 @@ public abstract class Actor {
 		this.faction = faction;
 	}
 
-	public int addToInventory(Item item) throws InventoryFullException,
-			NoSuchItemException {
+	public int addToInventory(Item item)
+			throws InventoryFullException, NoSuchItemException {
 		for (int i = 0; i < inventory.length - 1; i++) {
 			if (inventory[i].getName().equals("")) {
 				inventory[i] = item;
 				return 0;
-			} else if (i == inventory.length - 1) {
+			}
+			else if (i == inventory.length - 1) {
 				throw new InventoryFullException();
 			}
 		}
@@ -113,12 +116,10 @@ public abstract class Actor {
 		return (result > DC);
 	}
 
-	public void Move(int direction) {
-	}
 
 	public void setAV(String name, int value) {
-		ActorValue[] avs = { strength, agility, constitution, intelligence,
-				luck };
+		ActorValue[] avs =
+				{ strength, agility, constitution, intelligence, luck };
 		for (ActorValue a : avs) {
 			if (a.getName().equalsIgnoreCase(name)) {
 				a.setValue(value);
@@ -138,8 +139,11 @@ public abstract class Actor {
 		this.name = name;
 	}
 
-	public void setTile(int x, int y) {
+	public void setTileX(int x) {
 		currentTileX = x;
+	}
+
+	public void setTileY(int y) {
 		currentTileY = y;
 	}
 

@@ -1,3 +1,4 @@
+
 package game;
 
 import java.awt.Color;
@@ -15,9 +16,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
 class TileButton extends JComponent implements MouseListener {
-	private interface Executable {
-		public void run(MouseEvent e);
-	}
 
 	/**
 	 * 
@@ -44,9 +42,10 @@ class TileButton extends JComponent implements MouseListener {
 		addMouseListener(this);
 		rect = new Rectangle2D.Double(x, y, w, h);
 		try {
-			ClassLoader classLoader = Thread.currentThread()
-					.getContextClassLoader();
-			InputStream input = classLoader.getResourceAsStream("Title.png");
+			ClassLoader classLoader =
+					Thread.currentThread().getContextClassLoader();
+			InputStream input =
+					classLoader.getResourceAsStream("Title.png");
 			image = ImageIO.read(input);
 			input.close();
 		} catch (IOException e) {
@@ -58,13 +57,13 @@ class TileButton extends JComponent implements MouseListener {
 		return rect.contains(point);
 	}
 
-	@ Override
+	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@ Override
+	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
 		if (contains(e.getPoint())) {
@@ -72,25 +71,25 @@ class TileButton extends JComponent implements MouseListener {
 		}
 	}
 
-	@ Override
+	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		setBackground(color.darker());
 	}
 
-	@ Override
+	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@ Override
+	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@ Override
+	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		setBackground(Color.RED);
