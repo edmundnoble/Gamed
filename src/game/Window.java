@@ -14,7 +14,7 @@ public class Window {
 		START, GAME, CHARCREATE
 	}
 
-	public static Box contentBox;
+	public static Box contentBox = new GameMap();
 
 	public static final StartWindow startWindow = new StartWindow();
 	public static final GameWindow gameWindow = new GameWindow();

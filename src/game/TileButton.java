@@ -9,13 +9,12 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
-import java.io.IOException;
-import java.io.InputStream;
 
-import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
-class TileButton extends JComponent implements MouseListener {
+import characters.Actor;
+
+public class TileButton extends JComponent implements MouseListener {
 
 	/**
 	 * 
@@ -25,32 +24,29 @@ class TileButton extends JComponent implements MouseListener {
 
 	private Color color;
 
+	private Actor actor = null;
+
 	private int x, y, w, h;
 
 	private Image image;
 
-	public TileButton(int x, int y, int w, int h, Image image) {
+	public TileButton(int x, int y, Image image) {
 		super();
 		this.image = image;
 		this.x = x;
 		this.y = y;
-		this.w = w;
-		this.h = h;
+		this.h = image.getHeight(this);
+		this.w = image.getWidth(this);
 		setSize(w, h);
 		setLocation(x, y);
 		enableInputMethods(true);
 		addMouseListener(this);
 		rect = new Rectangle2D.Double(x, y, w, h);
-		try {
-			ClassLoader classLoader =
-					Thread.currentThread().getContextClassLoader();
-			InputStream input =
-					classLoader.getResourceAsStream("Title.png");
-			image = ImageIO.read(input);
-			input.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	}
+
+	public TileButton(int x, int y, Image image, Actor actor) {
+		this(x, y, image);
+		this.actor = actor;
 	}
 
 	public boolean Contains(Point point) {
@@ -66,15 +62,16 @@ class TileButton extends JComponent implements MouseListener {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if (contains(e.getPoint())) {
-			setBackground(color.brighter());
-		}
+		/*
+		 * if (contains(e.getPoint())) {
+		 * setBackground(color.brighter().brighter().brighter()); }
+		 */
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		setBackground(color.darker());
+		// setBackground(color.darker().darker().darker());
 	}
 
 	@Override
@@ -93,7 +90,8 @@ class TileButton extends JComponent implements MouseListener {
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		setBackground(Color.RED);
-		g2.draw(rect);
+		// g2.drawRect(100, 100, 100, 100);
+		g.drawImage(image, x, y, color, this);
 	}
 
 }
