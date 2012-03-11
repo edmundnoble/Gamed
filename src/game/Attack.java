@@ -13,6 +13,19 @@ public class Attack extends Action {
 
 	@Override
 	public void act(Actor actor, Direction direction) {
-
+		switch (direction) {
+			case DIRECTION_UP: {
+				break;
+			}
+			case DIRECTION_DOWN: {
+				break;
+			}
+			case DIRECTION_RIGHT: {
+				break;
+			}
+			case DIRECTION_LEFT: {
+				break;
+			}
+		}
 	}
 }

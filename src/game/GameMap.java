@@ -8,19 +8,19 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 
 import characters.Actor;
 
-public class GameMap extends Box {
+public class GameMap extends JPanel {
 
 	// g.drawImage(img, w, h, null);
+	private TileButton[][] buttons = new TileButton[8][10];
 	private Actor[] actors = new Actor[20];
 	private Image image;
 
 	public GameMap() {
-		super(BoxLayout.LINE_AXIS);
+		super();
 		try {
 			ClassLoader classLoader =
 					Thread.currentThread().getContextClassLoader();
@@ -32,17 +32,19 @@ public class GameMap extends Box {
 			e.printStackTrace();
 		}
 
-
 		// setLayout(new GridLayout(8, 10));
 
 		int imageWidth = image.getWidth(this);
 		int imageHeight = image.getHeight(this);
 		for (int i = 0; i * imageWidth <= getWidth(); i++) {
 			for (int j = 0; j * imageHeight <= getHeight(); j++) {
-				add(new TileButton((i * imageWidth) + imageWidth,
-						(j * imageHeight) + imageHeight, image));
+				add(new TileButton((i * imageWidth + 1),
+						(j * imageHeight), image));
 			}
 
+		}
+		for (int i = 0; i < 10; i++) {
+			add(new TileButton(0, 0, image));
 		}
 	}
 
@@ -50,10 +52,9 @@ public class GameMap extends Box {
 		return actors;
 	}
 
-
 	@Override
 	public void paintComponent(Graphics g) {
-
+		g.drawImage(image, 1, 1, this);
 		int imageWidth = image.getWidth(this);
 		int imageHeight = image.getHeight(this);
 		Graphics2D g2 = (Graphics2D) g;

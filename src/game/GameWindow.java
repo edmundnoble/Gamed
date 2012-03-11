@@ -17,7 +17,7 @@ public class GameWindow extends JFrame {
 		tiles = new Tile[20];
 		map = new GameMap();
 		setTitle("Game");
-		Window.contentBox = new GameMap();
+		Window.contentBox = map;
 
 		// pack();
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
