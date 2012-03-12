@@ -3,10 +3,19 @@ package game;
 
 import characters.Actor;
 
-
 public abstract class Action {
 
-	static enum ActionTypes {
+	public Action(ActionType type, Actor actor, Direction direction) {
+		this.type = type;
+		this.actor = actor;
+		this.direction = direction;
+	}
+
+	protected Direction direction;
+	protected Actor actor;
+	protected ActionType type;
+
+	static enum ActionType {
 		MOVEMENT, ATTACK, ITEM
 	}
 
@@ -14,16 +23,6 @@ public abstract class Action {
 		DIRECTION_UP, DIRECTION_RIGHT, DIRECTION_DOWN, DIRECTION_LEFT
 	}
 
-	private ActionTypes type;
-
-	public abstract void act(Actor actor, Direction direction);
-
-	public Action(ActionTypes type) {
-		this.type = type;
-	}
-
-	public ActionTypes getType() {
-		return type;
-	}
+	public abstract void act();
 
 }

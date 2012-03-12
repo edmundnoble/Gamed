@@ -5,14 +5,12 @@ import characters.Actor;
 
 public class Attack extends Action {
 
-	private Actor target;
-
-	public Attack() {
-		super(ActionTypes.ATTACK);
+	public Attack(Actor actor, Direction direction) {
+		super(ActionType.ATTACK, actor, direction);
 	}
 
 	@Override
-	public void act(Actor actor, Direction direction) {
+	public void act() {
 		switch (direction) {
 			case DIRECTION_UP: {
 				break;

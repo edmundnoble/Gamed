@@ -3,19 +3,21 @@ package game;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 
 import characters.Actor;
 
-public class TileButton extends JComponent {
+public class TileButton extends JComponent implements MouseListener {
 
 	/**
 	 * 
 	 */
+
 	private static final long serialVersionUID = -12314L;
 	private Rectangle2D rect = new Rectangle2D.Double();
 
@@ -36,6 +38,8 @@ public class TileButton extends JComponent {
 		this.w = image.getWidth(this);
 		setSize(w, h);
 		setLocation(x, y);
+		enableInputMethods(true);
+		addMouseListener(this);
 	}
 
 	public TileButton(int x, int y, Image image, Actor actor) {
@@ -53,10 +57,38 @@ public class TileButton extends JComponent {
 
 	@Override
 	public void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
 		setBackground(Color.RED);
-		// g2.drawRect(100, 100, 100, 100);
-		g2.drawImage(image, x, y, color, this);
+		g.drawImage(image, x, y, color, this);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println(x + " button clicked.");
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("Pressed.");
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println(x + "," + y + " button clicked.");
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

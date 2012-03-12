@@ -1,3 +1,4 @@
+
 package game;
 
 import characters.Actor;
@@ -8,19 +9,32 @@ public class Item {
 
 	private Actor owner;
 
-	private int cost;
+	private int cost = 0, weight = 0;
 
 	public Item() {
 		this("Default");
 	}
 
 	public Item(String name) {
-		this(name, 0);
+		this.name = name;
 	}
 
 	public Item(String name, int cost) {
-		this.name = name;
+		this(name);
 		this.cost = cost;
+	}
+
+	public Item(String name, int cost, int weight) {
+		this(name, cost);
+		this.weight = weight;
+	}
+
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
 	}
 
 	public int getCost() {
@@ -34,7 +48,8 @@ public class Item {
 	public boolean isOwned(Item i) {
 		if (owner != null) {
 			return true;
-		} else {
+		}
+		else {
 			return false;
 		}
 	}

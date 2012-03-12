@@ -5,14 +5,12 @@ import characters.Actor;
 
 public class Movement extends Action {
 
-
-	public Movement() {
-		super(ActionTypes.MOVEMENT);
+	public Movement(Actor actor, Direction direction) {
+		super(ActionType.MOVEMENT, actor, direction);
 	}
 
-
 	@Override
-	public void act(Actor actor, Direction direction) {
+	public void act() {
 		switch (direction) {
 			case DIRECTION_UP:
 				if (actor.getTileY() == 9) {

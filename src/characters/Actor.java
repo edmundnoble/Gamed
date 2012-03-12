@@ -1,23 +1,54 @@
 
 package characters;
 
+import game.Action;
 import game.GameMap;
 import game.Item;
 import game.Tile;
+import game.Weapon;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
 import utils.InventoryFullException;
-import utils.NoSuchItemException;
 
 public abstract class Actor {
 
-	private Item[] inventory = new Item[20];
-
+	private ArrayList<Item> inventory = new ArrayList<Item>();
+	private Weapon weapon1 = Weapon.FISTS, weapon2 = null;
+	private static int MAX_INVENTORY = 20;
 	private GameMap currentMap;
+	private Action currentAction = null;
 
-	int[] saves = { 1, 2, 3 };
+	enum Saves {
+		FORTITUDE, WILL, REFLEX
+	}
+
+	public void setNextAction(Action action) {
+		currentAction = action;
+	}
+
+	public Action getNextAction() {
+		return currentAction;
+	}
+
+	public void pickup(Item item) {
+		if (inventory.size() >= MAX_INVENTORY) {
+			return;
+		}
+		else {
+			inventory.add(item);
+		}
+
+	}
+
+	public void drop(Item item) {
+		if (inventory.contains(item)) {
+			inventory.remove(item);
+			currentMap.addItem(item);
+		}
+	}
 
 	public static final int MAXPARTYMEMBERS = 4;
 
@@ -31,7 +62,7 @@ public abstract class Actor {
 	private String name;
 
 	public Actor(String name, int stre, int inte, int agil, int luc,
-			int cons, int level, Faction factions, GameMap map,
+			int cons, int level, Faction faction, GameMap map,
 			Tile currentTile) {
 		this.setName(name);
 		strength = new ActorValue("Strength", stre);
@@ -44,18 +75,19 @@ public abstract class Actor {
 		this.faction = faction;
 	}
 
-	public int addToInventory(Item item)
-			throws InventoryFullException, NoSuchItemException {
-		for (int i = 0; i < inventory.length - 1; i++) {
-			if (inventory[i].getName().equals("")) {
-				inventory[i] = item;
-				return 0;
-			}
-			else if (i == inventory.length - 1) {
-				throw new InventoryFullException();
-			}
+	public void useItem(Item item) {
+		if (item instanceof Weapon) {
+			equip(item);
 		}
-		throw new NoSuchItemException(item.getName());
+	}
+
+	public void addToInventory(Item item) throws InventoryFullException {
+		if (inventory.toArray().length >= 20) {
+			throw new InventoryFullException();
+		}
+		else {
+			inventory.add(item);
+		}
 	}
 
 	public ActorValue getAgi() {
@@ -79,7 +111,11 @@ public abstract class Actor {
 	}
 
 	public Item[] getInventory() {
-		return inventory;
+		return (Item[]) inventory.toArray();
+	}
+
+	public void equip(Item item) {
+
 	}
 
 	public ActorValue getLuck() {
@@ -115,7 +151,6 @@ public abstract class Actor {
 		double result = (dateRand.nextDouble() * 19 + 1);
 		return (result > DC);
 	}
-
 
 	public void setAV(String name, int value) {
 		ActorValue[] avs =

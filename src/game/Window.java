@@ -24,7 +24,7 @@ public class Window {
 
 			@Override
 			public void run() {
-				startWindow.setSize(new Dimension(500, 500));
+				startWindow.setSize(new Dimension(600, 600));
 				startWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				gameWindow.setSize(new Dimension(500, 500));
