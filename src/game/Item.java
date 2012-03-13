@@ -3,7 +3,7 @@ package game;
 
 import characters.Actor;
 
-public class Item {
+public abstract class Item {
 
 	private String name = "Default";
 
@@ -15,7 +15,7 @@ public class Item {
 		this("Default");
 	}
 
-	public Item(String name) {
+	Item(String name) {
 		this.name = name;
 	}
 
@@ -32,6 +32,8 @@ public class Item {
 	public int getWeight() {
 		return weight;
 	}
+
+	public abstract void use(Actor actor);
 
 	public void setWeight(int weight) {
 		this.weight = weight;

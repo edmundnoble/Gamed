@@ -5,14 +5,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 
 import characters.Actor;
 
-public class TileButton extends JComponent implements MouseListener {
+public class TileButton extends JComponent {
 
 	/**
 	 * 
@@ -25,7 +24,10 @@ public class TileButton extends JComponent implements MouseListener {
 
 	private Actor actor = null;
 
-	private int x, y, w, h;
+	private int x;
+	private int y;
+	private int w;
+	private int h;
 
 	private Image image;
 
@@ -38,8 +40,8 @@ public class TileButton extends JComponent implements MouseListener {
 		this.w = image.getWidth(this);
 		setSize(w, h);
 		setLocation(x, y);
-		enableInputMethods(true);
-		addMouseListener(this);
+		// enableInputMethods(true);
+		// addMouseListener(this);
 	}
 
 	public TileButton(int x, int y, Image image, Actor actor) {
@@ -61,31 +63,26 @@ public class TileButton extends JComponent implements MouseListener {
 		g.drawImage(image, x, y, color, this);
 	}
 
-	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println(x + " button clicked.");
 	}
 
-	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println("Pressed.");
 	}
 
-	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println(x + "," + y + " button clicked.");
 	}
 
-	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 

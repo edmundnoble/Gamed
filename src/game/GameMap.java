@@ -1,12 +1,14 @@
 
 package game;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -29,7 +31,6 @@ public class GameMap extends JPanel implements MouseListener {
 
 	public GameMap() {
 		super();
-		setSize(100, 100);
 		enableInputMethods(true);
 		addMouseListener(this);
 		try {
@@ -55,9 +56,15 @@ public class GameMap extends JPanel implements MouseListener {
 			}
 
 		}
-		for (int i = 0; i < 10; i++) {
-			add(new TileButton(0, 0, image));
+		int w = 0;
+		int h = 0;
+		for (TileButton[] buttons : this.buttons) {
+			for (TileButton button : buttons) {
+				w += button.getWidth();
+				h += button.getHeight();
+			}
 		}
+		setSize(new Dimension(w, h));
 	}
 
 	public HashMap<Point2D, Actor> getActors() {
@@ -92,7 +99,20 @@ public class GameMap extends JPanel implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
+		System.out.print("\nLOLFAG");
+		for (TileButton[] buttons : this.buttons) {
+			for (TileButton button : buttons) {
+				Rectangle2D rect =
+						new Rectangle2D.Double(button.getX(),
+								button.getY(), button.getWidth(),
+								button.getHeight());
 
+				if (rect.contains(e.getPoint())) {
+					System.out.print(button.getX() + "," + button.getY()
+							+ " entered.");
+				}
+			}
+		}
 	}
 
 	@Override
@@ -103,8 +123,10 @@ public class GameMap extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		if (contains(e.getPoint())) {
+			System.out.println("LOL");
+			// TODO Auto-generated method stub
+		}
 	}
 
 	@Override

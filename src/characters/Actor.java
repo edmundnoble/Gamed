@@ -21,8 +21,13 @@ public abstract class Actor {
 	private GameMap currentMap;
 	private Action currentAction = null;
 
-	enum Saves {
+	enum Save {
 		FORTITUDE, WILL, REFLEX
+	}
+
+	public Weapon[] getEquippedWeapons() {
+		Weapon[] weapons = { weapon1, weapon2 };
+		return weapons;
 	}
 
 	public void setNextAction(Action action) {
@@ -47,6 +52,9 @@ public abstract class Actor {
 		if (inventory.contains(item)) {
 			inventory.remove(item);
 			currentMap.addItem(item);
+		}
+		else {
+			utils.UserMessage.send("");
 		}
 	}
 
@@ -79,6 +87,9 @@ public abstract class Actor {
 		if (item instanceof Weapon) {
 			equip(item);
 		}
+		else {
+			item.use(this);
+		}
 	}
 
 	public void addToInventory(Item item) throws InventoryFullException {
@@ -98,8 +109,8 @@ public abstract class Actor {
 		return constitution;
 	}
 
-	public ActorValue getCurrentHP() {
-		return currentHP;
+	public int getHP() {
+		return currentHP.getValue();
 	}
 
 	public Faction getFaction() {
@@ -146,18 +157,20 @@ public abstract class Actor {
 		return currentTileY;
 	}
 
-	public boolean makeSave(int DC) {
+	public boolean makeSave(Save type, int DC) {
 		Random dateRand = new Random(new Date().getTime());
 		double result = (dateRand.nextDouble() * 19 + 1);
 		return (result > DC);
 	}
 
 	public void setAV(String name, int value) {
+
 		ActorValue[] avs =
 				{ strength, agility, constitution, intelligence, luck };
 		for (ActorValue a : avs) {
 			if (a.getName().equalsIgnoreCase(name)) {
 				a.setValue(value);
+				break;
 			}
 		}
 	}
@@ -166,8 +179,8 @@ public abstract class Actor {
 		this.faction = faction;
 	}
 
-	public void setHP(ActorValue HP) {
-		currentHP = HP;
+	public void setHP(int hp) {
+		currentHP.setValue(hp);
 	}
 
 	public void setName(String name) {
