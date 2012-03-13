@@ -4,7 +4,6 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
@@ -40,8 +39,6 @@ public class TileButton extends JComponent {
 		this.w = image.getWidth(this);
 		setSize(w, h);
 		setLocation(x, y);
-		// enableInputMethods(true);
-		// addMouseListener(this);
 	}
 
 	public TileButton(int x, int y, Image image, Actor actor) {
@@ -61,31 +58,6 @@ public class TileButton extends JComponent {
 	public void paintComponent(Graphics g) {
 		setBackground(Color.RED);
 		g.drawImage(image, x, y, color, this);
-	}
-
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println(x + " button clicked.");
-	}
-
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("Pressed.");
-	}
-
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println(x + "," + y + " button clicked.");
-	}
-
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

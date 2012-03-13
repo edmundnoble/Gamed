@@ -98,18 +98,16 @@ public class GameMap extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		System.out.print("\nLOLFAG");
 		for (TileButton[] buttons : this.buttons) {
 			for (TileButton button : buttons) {
 				Rectangle2D rect =
 						new Rectangle2D.Double(button.getX(),
 								button.getY(), button.getWidth(),
 								button.getHeight());
-
 				if (rect.contains(e.getPoint())) {
-					System.out.print(button.getX() + "," + button.getY()
-							+ " entered.");
+					System.out.print("Button " + "(" + button.getX()
+							/ button.getWidth() + "," + button.getY()
+							/ button.getHeight() + ") pressed.\n");
 				}
 			}
 		}
