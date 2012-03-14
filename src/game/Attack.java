@@ -13,7 +13,9 @@ public class Attack extends Action {
 	public void act() {
 		switch (direction) {
 			case DIRECTION_UP: {
-				break;
+				for (Weapon w : actor.getEquippedWeapons()) {
+					break;
+				}
 			}
 			case DIRECTION_DOWN: {
 				break;

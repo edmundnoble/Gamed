@@ -1,10 +1,8 @@
 
 package characters;
 
-import game.Action;
 import game.GameMap;
 import game.Item;
-import game.Tile;
 import game.Weapon;
 
 import java.util.ArrayList;
@@ -19,7 +17,6 @@ public abstract class Actor {
 	private Weapon weapon1 = Weapon.FISTS, weapon2 = null;
 	private static int MAX_INVENTORY = 20;
 	private GameMap currentMap;
-	private Action currentAction = null;
 
 	enum Save {
 		FORTITUDE, WILL, REFLEX
@@ -30,14 +27,6 @@ public abstract class Actor {
 		return weapons;
 	}
 
-	public void setNextAction(Action action) {
-		currentAction = action;
-	}
-
-	public Action getNextAction() {
-		return currentAction;
-	}
-
 	public void pickup(Item item) {
 		if (inventory.size() >= MAX_INVENTORY) {
 			return;
@@ -45,6 +34,11 @@ public abstract class Actor {
 		else {
 			inventory.add(item);
 		}
+
+	}
+
+	public void levelUp() {
+		xp = 0;
 
 	}
 
@@ -63,15 +57,14 @@ public abstract class Actor {
 	private Faction faction;
 
 	private int currentTileX, currentTileY;
-
+	private int xp;
 	private ActorValue strength, intelligence, agility, constitution,
 			luck, currentHP, maxHP, level = new ActorValue();
 
 	private String name;
 
 	public Actor(String name, int stre, int inte, int agil, int luc,
-			int cons, int level, Faction faction, GameMap map,
-			Tile currentTile) {
+			int cons, int level, Faction faction, GameMap map, int x, int y) {
 		this.setName(name);
 		strength = new ActorValue("Strength", stre);
 		intelligence = new ActorValue("Intelligence", inte);
@@ -81,15 +74,12 @@ public abstract class Actor {
 		maxHP = new ActorValue("Max HP", (level * cons) * 2);
 		currentHP = new ActorValue("HP", maxHP.getValue());
 		this.faction = faction;
+		currentTileX = x;
+		currentTileY = y;
 	}
 
 	public void useItem(Item item) {
-		if (item instanceof Weapon) {
-			equip(item);
-		}
-		else {
-			item.use(this);
-		}
+		item.use(this);
 	}
 
 	public void addToInventory(Item item) throws InventoryFullException {
@@ -193,6 +183,14 @@ public abstract class Actor {
 
 	public void setTileY(int y) {
 		currentTileY = y;
+	}
+
+	public ActorValue getLevel() {
+		return level;
+	}
+
+	public void setLevel(ActorValue level) {
+		this.level = level;
 	}
 
 }
