@@ -1,9 +1,9 @@
 
 package game;
 
-import java.awt.Dimension;
+import graphics.TileButton;
+
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -23,7 +23,8 @@ public class GameMap extends JPanel implements MouseListener {
 	// g.drawImage(img, w, h, null);
 	private TileButton[][] buttons = new TileButton[8][10];
 	private HashMap<Point2D, Actor> actors = new HashMap<Point2D, Actor>();
-	private Image image;
+	private int tilesX = 8, tilesY = 10;
+	public static Image image, brightImage;
 
 	public void addActor(Actor actor, Point2D location) {
 		actors.put(location, actor);
@@ -39,6 +40,9 @@ public class GameMap extends JPanel implements MouseListener {
 			InputStream input =
 					classLoader.getResourceAsStream("Title.png");
 			image = ImageIO.read(input);
+			input = classLoader.getResourceAsStream("Title_brighter.png");
+			System.out.println(input == null);
+			brightImage = ImageIO.read(input);
 			input.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -48,23 +52,18 @@ public class GameMap extends JPanel implements MouseListener {
 
 		int imageWidth = image.getWidth(this);
 		int imageHeight = image.getHeight(this);
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 10; j++) {
+		for (int i = 0; i < tilesX; i++) {
+			for (int j = 0; j < tilesY; j++) {
 				buttons[i][j] =
 						new TileButton((i * imageWidth + 1),
-								(j * imageHeight), image);
+								(j * imageHeight));
 			}
 
 		}
-		int w = 0;
-		int h = 0;
-		for (TileButton[] buttons : this.buttons) {
-			for (TileButton button : buttons) {
-				w += button.getWidth();
-				h += button.getHeight();
-			}
-		}
-		setSize(new Dimension(w, h));
+		int w = image.getWidth(this) * tilesX;
+		int h = image.getHeight(this) * tilesY;
+
+		setSize(w, h);
 	}
 
 	public HashMap<Point2D, Actor> getActors() {
@@ -78,17 +77,8 @@ public class GameMap extends JPanel implements MouseListener {
 				button.paintComponent(g);
 			}
 		}
-		g.drawImage(image, 1, 1, this);
 		int imageWidth = image.getWidth(this);
 		int imageHeight = image.getHeight(this);
-		Graphics2D g2 = (Graphics2D) g;
-		// g2.drawImage(image, 0, 0, this);
-		/*
-		 * for (int i = 0; i * imageWidth <= getWidth(); i++) { for (int j = 0;
-		 * j * imageHeight <= getHeight(); j++) { if (i + j > 0 && i + j < 80) {
-		 * g2.copyArea(0, 0, imageWidth, imageHeight, i imageWidth + imageWidth,
-		 * j imageHeight); } } }
-		 */
 	}
 
 	@Override
@@ -105,10 +95,17 @@ public class GameMap extends JPanel implements MouseListener {
 								button.getY(), button.getWidth(),
 								button.getHeight());
 				if (rect.contains(e.getPoint())) {
-					System.out.print("Button " + "(" + button.getX()
-							/ button.getWidth() + "," + button.getY()
-							/ button.getHeight() + ") pressed.\n");
+					System.out.print("Button " + "("
+							+ (button.getX() / button.getWidth() + 1)
+							+ ","
+							+ (button.getY() / button.getHeight() + 1)
+							+ ") pressed.\n");
+					button.entered(true);
 				}
+				// else {
+				// button.entered(false);
+				// }
+
 			}
 		}
 	}
@@ -122,14 +119,14 @@ public class GameMap extends JPanel implements MouseListener {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if (contains(e.getPoint())) {
-			System.out.println("LOL");
+			System.out.println("Gamemap entered.");
 			// TODO Auto-generated method stub
 		}
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+		System.out.println("Gamemap exited.");
 
 	}
 

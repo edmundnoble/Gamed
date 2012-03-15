@@ -1,5 +1,7 @@
 
-package game;
+package graphics;
+
+import game.GameMap;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -28,21 +30,23 @@ public class TileButton extends JComponent {
 	private int w;
 	private int h;
 
-	private Image image;
+	private Image image, brightImage;
 
-	public TileButton(int x, int y, Image image) {
+	public TileButton(int x, int y) {
 		super();
-		this.image = image;
+		image = GameMap.image;
+		brightImage = GameMap.brightImage;
 		this.x = x;
 		this.y = y;
 		this.h = image.getHeight(this);
 		this.w = image.getWidth(this);
 		setSize(w, h);
 		setLocation(x, y);
+
 	}
 
-	public TileButton(int x, int y, Image image, Actor actor) {
-		this(x, y, image);
+	public TileButton(int x, int y, Actor actor) {
+		this(x, y);
 		this.actor = actor;
 	}
 
@@ -56,8 +60,18 @@ public class TileButton extends JComponent {
 
 	@Override
 	public void paintComponent(Graphics g) {
-		setBackground(Color.RED);
-		g.drawImage(image, x, y, color, this);
+		if (!entered) {
+			g.drawImage(image, x, y, this);
+		}
+		else {
+			g.drawImage(brightImage, x, y, this);
+		}
 	}
+
+	public void entered(boolean enable) {
+		entered = enable;
+	}
+
+	private boolean entered = false;
 
 }
