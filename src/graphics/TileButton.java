@@ -31,6 +31,7 @@ public class TileButton extends JComponent {
 	private int h;
 
 	private Image image, brightImage;
+	private boolean entered;
 
 	public TileButton(int x, int y) {
 		super();
@@ -42,7 +43,6 @@ public class TileButton extends JComponent {
 		this.w = image.getWidth(this);
 		setSize(w, h);
 		setLocation(x, y);
-
 	}
 
 	public TileButton(int x, int y, Actor actor) {
@@ -60,18 +60,23 @@ public class TileButton extends JComponent {
 
 	@Override
 	public void paintComponent(Graphics g) {
-		if (!entered) {
-			g.drawImage(image, x, y, this);
-		}
-		else {
+		if (pressed) {
 			g.drawImage(brightImage, x, y, this);
 		}
+		else {
+			g.drawImage(image, x, y, this);
+		}
+
 	}
 
-	public void entered(boolean enable) {
-		entered = enable;
+	public void press(boolean enable) {
+		pressed = enable;
 	}
 
-	private boolean entered = false;
+	public boolean isPressed() {
+		return pressed;
+	}
+
+	private boolean pressed = false;
 
 }

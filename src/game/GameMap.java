@@ -5,6 +5,7 @@ import graphics.TileButton;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
@@ -26,8 +27,21 @@ public class GameMap extends JPanel implements MouseListener {
 	private int tilesX = 8, tilesY = 10;
 	public static Image image, brightImage;
 
-	public void addActor(Actor actor, Point2D location) {
-		actors.put(location, actor);
+	public void addActor(Point2D location, Actor actor)
+			throws OutOfMapException {
+
+		if (!actors.containsKey(location)) {
+			actors.put(location, actor);
+		}
+		else if (location.getX() > tilesX | location.getY() > tilesY) {
+			throw new OutOfMapException((int) location.getX(),
+					(int) location.getY());
+		}
+		else {
+			addActor(
+					new Point((int) location.getX() + 1,
+							(int) location.getY()), actor);
+		}
 	}
 
 	public GameMap() {
@@ -77,8 +91,11 @@ public class GameMap extends JPanel implements MouseListener {
 				button.paintComponent(g);
 			}
 		}
-		int imageWidth = image.getWidth(this);
-		int imageHeight = image.getHeight(this);
+		for (TileButton[] buttons : this.buttons) {
+			for (TileButton button : buttons) {
+				button.paintComponent(g);
+			}
+		}
 	}
 
 	@Override
@@ -99,12 +116,15 @@ public class GameMap extends JPanel implements MouseListener {
 							+ (button.getX() / button.getWidth() + 1)
 							+ ","
 							+ (button.getY() / button.getHeight() + 1)
-							+ ") pressed.\n");
-					button.entered(true);
+							+ ") pressed.\n Pressed is "
+							+ button.isPressed() + ".\n");
+					button.press(true);
+					button.paintComponent(getGraphics());
 				}
-				// else {
-				// button.entered(false);
-				// }
+
+				else {
+					button.press(false);
+				}
 
 			}
 		}
@@ -113,6 +133,24 @@ public class GameMap extends JPanel implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
+		for (TileButton[] buttons : this.buttons) {
+			for (TileButton button : buttons) {
+				Rectangle2D rect =
+						new Rectangle2D.Double(button.getX(),
+								button.getY(), button.getWidth(),
+								button.getHeight());
+				if (rect.contains(e.getPoint())) {
+					System.out.println("("
+							+ (button.getX() / button.getWidth() + 1)
+							+ ","
+							+ (button.getY() / button.getHeight() + 1)
+							+ ") released. Entered is "
+							+ button.isPressed());
+				}
+				button.press(false);
+				button.paintComponent(getGraphics());
+			}
+		}
 
 	}
 
