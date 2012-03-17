@@ -1,12 +1,11 @@
 
-package game;
+package utils;
 
 public class OutOfMapException extends Exception {
 
 	private static final long serialVersionUID = 5507515042444401L;
 
 	public OutOfMapException(int x, int y) {
-		System.out.println("OutOfMapException at point (" + x + "," + y
-				+ ").");
+		System.err.printf("\nOutOfMapException at point (%d, %d).", x, y);
 	}
 }

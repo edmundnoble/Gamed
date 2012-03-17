@@ -14,12 +14,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
+import utils.OutOfMapException;
+
 class GameWindow extends JFrame implements ActionListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3854950048874492L;
+
 	public static final int DEFAULT_WIDTH = 1000, DEFAULT_HEIGHT = 600;
 	private JPanel gameMap = new GameMap();
 	private final JMenuBar dropDown = new JMenuBar();
@@ -51,14 +51,11 @@ class GameWindow extends JFrame implements ActionListener {
 		// pack();
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		// add(gamePanel);
-		add(startMenu);
 		add(gameMap);// add(component);
-
 		startButton.addActionListener(this);
-
-		gameMap.setVisible(true);
-		gamePanel.setVisible(false);
-		gameMap.setSize(100, 100);
+		gameMap.setVisible(false);
+		startMenu.setVisible(true);
+		add(startMenu);
 		setVisible(true);
 	}
 
@@ -67,22 +64,16 @@ class GameWindow extends JFrame implements ActionListener {
 		startMenu.setVisible(false);
 		gamePanel.setVisible(true);
 		gameMap.setVisible(true);
-		System.out.println(gamePanel.isVisible());
-		System.out.println(gameMap.isVisible());
-		System.out.println(gameMap.getWidth() + "," + gameMap.getHeight());
 	}
 
 }
 
 public class Window {
 
-	enum WindowType {
-		START, GAME, CHARCREATE
-	}
+	public static GameWindow gameWindow = new GameWindow();
 
-	public static final GameWindow gameWindow = new GameWindow();
-
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException,
+			OutOfMapException {
 		EventQueue.invokeLater(new Runnable() {
 
 			@Override

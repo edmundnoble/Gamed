@@ -1,8 +1,8 @@
 
 package characters;
 
+import utils.OutOfMapException;
 import game.GameMap;
-import game.OutOfMapException;
 
 public class Enemy extends NPC {
 

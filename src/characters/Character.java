@@ -3,7 +3,6 @@ package characters;
 
 import game.GameMap;
 import game.Item;
-import game.OutOfMapException;
 import game.Weapon;
 
 import java.awt.Point;
@@ -13,56 +12,33 @@ import java.util.Random;
 
 import utils.InventoryFullException;
 import utils.NoSuchItemException;
+import utils.OutOfMapException;
 
 public abstract class Character {
-
-	private ArrayList<Item> inventory = new ArrayList<Item>();
-	private Weapon weapon1 = Weapon.FISTS, weapon2 = null;
-	private static int MAX_INVENTORY = 20;
-	private GameMap currentMap;
-	private boolean acted = false;
-
-	public boolean hasActed() {
-		return acted;
-	}
-
-	public void setActed(boolean enable) {
-		acted = enable;
-	}
 
 	enum Save {
 		FORTITUDE, WILL, REFLEX
 	}
 
-	public Weapon[] getEquippedWeapons() {
-		Weapon[] weapons = { weapon1, weapon2 };
-		return weapons;
-	}
+	private ArrayList<Item> inventory = new ArrayList<Item>();
+	private Weapon weapon1 = Weapon.FISTS, weapon2 = null;
+	private static int MAX_INVENTORY = 20;
+	private GameMap currentMap;
 
-	public void pickup(Item item) {
-		if (inventory.size() >= MAX_INVENTORY) {
-			return;
-		}
-		else {
-			inventory.add(item);
-		}
-
-	}
-
-	public void levelUp() {
-		xp = 0;
-
-	}
+	private boolean acted = false;
 
 	public static final int MAXPARTYMEMBERS = 4;
 
 	private Faction faction;
 
-	private int xp;
+	private long xp;
+
 	private ActorValue strength, intelligence, agility, constitution,
 			luck, currentHP, maxHP, level = new ActorValue();
 
 	private String name;
+
+	private Point location = new Point();
 
 	public Character(String name, int stre, int inte, int agil, int luc,
 			int cons, int level, Faction faction, GameMap map, int x, int y)
@@ -80,10 +56,6 @@ public abstract class Character {
 		map.putCharacter(new Point(x, y), this);
 	}
 
-	public void useItem(Item item) {
-		item.use(this);
-	}
-
 	public void addToInventory(Item item) throws InventoryFullException {
 		if (inventory.toArray().length >= 20) {
 			throw new InventoryFullException();
@@ -91,6 +63,26 @@ public abstract class Character {
 		else {
 			inventory.add(item);
 		}
+	}
+
+	public void dropItem(Item item) throws NoSuchItemException,
+			OutOfMapException {
+		if (!inventory.contains(item)) {
+			throw new NoSuchItemException("You don't have a "
+					+ item.getName());
+		}
+		else {
+			try {
+				currentMap.putItem(location, item);
+				inventory.remove(item);
+			} catch (OutOfMapException e) {
+
+			}
+		}
+	}
+
+	public void equip(Item item) {
+
 	}
 
 	public ActorValue getAgi() {
@@ -101,12 +93,17 @@ public abstract class Character {
 		return constitution;
 	}
 
-	public int getHP() {
-		return currentHP.getValue();
+	public Weapon[] getEquippedWeapons() {
+		Weapon[] weapons = { weapon1, weapon2 };
+		return weapons;
 	}
 
 	public Faction getFaction() {
 		return faction;
+	}
+
+	public int getHP() {
+		return currentHP.getValue();
 	}
 
 	public ActorValue getInt() {
@@ -117,8 +114,12 @@ public abstract class Character {
 		return (Item[]) inventory.toArray();
 	}
 
-	public void equip(Item item) {
+	public ActorValue getLevel() {
+		return level;
+	}
 
+	public Point getLocation() {
+		return location;
 	}
 
 	public ActorValue getLuck() {
@@ -127,16 +128,6 @@ public abstract class Character {
 
 	public GameMap getMap() {
 		return currentMap;
-	}
-
-	public Point getLocation() {
-		return location;
-	}
-
-	private Point location = new Point();
-
-	public void setLocation(Point newLoc) {
-		location = newLoc;
 	}
 
 	public ActorValue getMaxHP() {
@@ -151,10 +142,33 @@ public abstract class Character {
 		return strength;
 	}
 
+	public boolean hasActed() {
+		return acted;
+	}
+
+	public void levelUp() {
+		xp = 0;
+
+	}
+
 	public boolean makeSave(Save type, int DC) {
 		Random dateRand = new Random(new Date().getTime());
 		double result = (dateRand.nextDouble() * 19 + 1);
 		return (result > DC);
+	}
+
+	public void pickup(Item item) {
+		if (inventory.size() >= MAX_INVENTORY) {
+			return;
+		}
+		else {
+			inventory.add(item);
+		}
+
+	}
+
+	public void setActed(boolean enable) {
+		acted = enable;
 	}
 
 	public void setAV(String name, int value) {
@@ -177,31 +191,24 @@ public abstract class Character {
 		currentHP.setValue(hp);
 	}
 
-	public void dropItem(Item item) throws NoSuchItemException,
-			OutOfMapException {
-		if (!inventory.contains(item)) {
-			throw new NoSuchItemException("You don't have a "
-					+ item.getName());
-		}
-		else {
-			currentMap.putItem(location, item);
-		}
+	public void setLevel(ActorValue level) {
+		this.level = level;
+	}
+
+	public void setLocation(Point newLoc) {
+		location = newLoc;
+	}
+
+	public void setMap(GameMap gameMap) {
+		currentMap = gameMap;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public ActorValue getLevel() {
-		return level;
-	}
-
-	public void setLevel(ActorValue level) {
-		this.level = level;
-	}
-
-	public void setMap(GameMap gameMap) {
-		currentMap = gameMap;
+	public void useItem(Item item) {
+		item.use(this);
 	}
 
 }

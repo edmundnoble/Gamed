@@ -16,6 +16,7 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import utils.OutOfMapException;
 import characters.Character;
 
 public class GameMap extends JPanel implements MouseListener {
@@ -57,9 +58,8 @@ public class GameMap extends JPanel implements MouseListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.print(getX() + " " + getY());
 		assert tileImage.getHeight(this) == brightTileImage
-				.getHeight(this);
+				.getHeight(this) && tileImage.getHeight(this) == 50;
 		enableInputMethods(true);
 		addMouseListener(this);
 		imageWidth = brightTileImage.getWidth(this);
@@ -73,7 +73,8 @@ public class GameMap extends JPanel implements MouseListener {
 		}
 		int w = tileImage.getWidth(this) * tilesX;
 		int h = tileImage.getHeight(this) * tilesY;
-
+		System.out.println(w);
+		System.out.println(h);
 		setSize(w, h);
 	}
 
