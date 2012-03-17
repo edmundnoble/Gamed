@@ -1,7 +1,7 @@
 
 package game;
 
-import characters.Actor;
+import characters.Character;
 
 public class Weapon extends Item {
 
@@ -31,7 +31,7 @@ public class Weapon extends Item {
 	private WeaponType type;
 
 	@Override
-	public void use(Actor actor) {
+	public void use(Character actor) {
 		for (Weapon weapon : actor.getEquippedWeapons()) {
 			if (weapon.equals(this)) {
 				return;

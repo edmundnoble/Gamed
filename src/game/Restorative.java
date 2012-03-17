@@ -1,7 +1,7 @@
 
 package game;
 
-import characters.Actor;
+import characters.Character;
 
 public class Restorative extends Item {
 
@@ -19,7 +19,7 @@ public class Restorative extends Item {
 	}
 
 	@Override
-	public void use(Actor actor) {
+	public void use(Character actor) {
 		if (power != -1) {
 			actor.setHP((int) (actor.getHP() + actor.getHP()
 					* powerPercent));

@@ -1,11 +1,11 @@
 
 package game;
 
-import characters.Actor;
+import characters.Character;
 
 public class Attack extends Action {
 
-	public Attack(Actor actor, Direction direction) {
+	public Attack(Character actor, Direction direction) {
 		super(ActionType.ATTACK, actor, direction);
 	}
 

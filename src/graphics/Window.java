@@ -14,27 +14,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
-public class Window {
-
-	enum WindowType {
-		START, GAME, CHARCREATE
-	}
-
-	public static final GameWindow gameWindow = new GameWindow();
-
-	public static void main(String[] args) throws IOException {
-		EventQueue.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				gameWindow.setVisible(true);
-			}
-		});
-
-	}
-
-}
-
 class GameWindow extends JFrame implements ActionListener {
 
 	/**
@@ -56,39 +35,62 @@ class GameWindow extends JFrame implements ActionListener {
 		dropDown.add(file);
 		dropDown.add(save);
 		dropDown.add(load);
-		add(dropDown);
+		// add(dropDown);
 		overPanel.add(startMenu);
 		overPanel.add(gamePanel);
 		gamePanel.add(returnButton);
-		gamePanel.add(gameMap);
 		startMenu.add(startButton);
 		// gameMap.setVisible(false);
 		gamePanel.setVisible(false);
 		overPanel.setVisible(true);
-		add(gameMap);
+		// gamePanel.add(gameMap);
 	}
 
 	public GameWindow() {
 		setTitle("Game: The Game");
 		// pack();
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-
-		add(gamePanel); // add(component);
+		// add(gamePanel);
 		add(startMenu);
+		add(gameMap);// add(component);
+
 		startButton.addActionListener(this);
-		setVisible(true);
-		gameMap.setVisible(false);
+
+		gameMap.setVisible(true);
 		gamePanel.setVisible(false);
+		gameMap.setSize(100, 100);
+		setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		startMenu.setVisible(false);
-		// gamePanel.setVisible(true);
+		gamePanel.setVisible(true);
 		gameMap.setVisible(true);
 		System.out.println(gamePanel.isVisible());
 		System.out.println(gameMap.isVisible());
 		System.out.println(gameMap.getWidth() + "," + gameMap.getHeight());
+	}
+
+}
+
+public class Window {
+
+	enum WindowType {
+		START, GAME, CHARCREATE
+	}
+
+	public static final GameWindow gameWindow = new GameWindow();
+
+	public static void main(String[] args) throws IOException {
+		EventQueue.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				gameWindow.setVisible(true);
+			}
+		});
+
 	}
 
 }

@@ -1,18 +1,18 @@
 
 package game;
 
-import characters.Actor;
+import characters.Character;
 
 public abstract class Action {
 
-	public Action(ActionType type, Actor actor, Direction direction) {
+	public Action(ActionType type, Character actor, Direction direction) {
 		this.type = type;
 		this.actor = actor;
 		this.direction = direction;
 	}
 
 	protected Direction direction;
-	protected Actor actor;
+	protected Character actor;
 	protected ActionType type;
 
 	static enum ActionType {

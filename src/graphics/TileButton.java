@@ -3,40 +3,28 @@ package graphics;
 
 import game.GameMap;
 
-import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 
-import characters.Actor;
-
 public class TileButton extends JComponent {
 
-	/**
-	 * 
-	 */
-
-	private static final long serialVersionUID = -12314L;
-	private Rectangle2D rect = new Rectangle2D.Double();
-
-	private Color color = Color.BLACK;
-
-	private Actor actor = null;
+	private static final long serialVersionUID = -1789637952468141155L;
 
 	private int x;
 	private int y;
 	private int w;
 	private int h;
 
-	private Image image, brightImage;
-	private boolean entered;
+	private Image image = GameMap.tileImage,
+			brightImage = GameMap.brightTileImage;
 
-	public TileButton(int x, int y) {
+	private boolean pressed = false;
+
+	public TileButton(int x, int y) throws HeadlessException {
 		super();
-		image = GameMap.image;
-		brightImage = GameMap.brightImage;
 		this.x = x;
 		this.y = y;
 		this.h = image.getHeight(this);
@@ -45,17 +33,8 @@ public class TileButton extends JComponent {
 		setLocation(x, y);
 	}
 
-	public TileButton(int x, int y, Actor actor) {
-		this(x, y);
-		this.actor = actor;
-	}
-
-	public Actor getActor() {
-		return actor;
-	}
-
-	public void setActor(Actor actor) {
-		this.actor = actor;
+	public boolean isPressed() {
+		return pressed;
 	}
 
 	@Override
@@ -72,11 +51,5 @@ public class TileButton extends JComponent {
 	public void press(boolean enable) {
 		pressed = enable;
 	}
-
-	public boolean isPressed() {
-		return pressed;
-	}
-
-	private boolean pressed = false;
 
 }

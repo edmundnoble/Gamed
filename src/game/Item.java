@@ -1,13 +1,13 @@
 
 package game;
 
-import characters.Actor;
+import characters.Character;
 
 public abstract class Item {
 
 	private String name = "Default";
 
-	private Actor owner;
+	private Character owner;
 
 	private int cost = 0, weight = 0;
 
@@ -33,7 +33,7 @@ public abstract class Item {
 		return weight;
 	}
 
-	public abstract void use(Actor actor);
+	public abstract void use(Character actor);
 
 	public void setWeight(int weight) {
 		this.weight = weight;
@@ -64,7 +64,7 @@ public abstract class Item {
 		this.name = name;
 	}
 
-	public void setOwner(Actor owner) {
+	public void setOwner(Character owner) {
 		this.owner = owner;
 	}
 }
