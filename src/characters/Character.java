@@ -16,12 +16,12 @@ public abstract class Character {
 	enum Save {
 		FORTITUDE, WILL, REFLEX
 	}
+
 	public long calcXP(int level) {
 		long xp = (1L >>> level) * 100;
 		return xp;
 	}
-	
-	
+
 	private ArrayList<Item> inventory = new ArrayList<Item>();
 	private Weapon weapon1 = Weapon.FISTS, weapon2 = null;
 	private static final int MAX_INVENTORY = 20;
@@ -124,11 +124,6 @@ public abstract class Character {
 		return acted;
 	}
 
-	public void levelUp() {
-		xp = 0;
-
-	}
-
 	public boolean makeSave(Save type, int DC) {
 		Random dateRand = new Random(new Date().getTime());
 		double result = (dateRand.nextDouble() * 19 + 1);
@@ -144,8 +139,9 @@ public abstract class Character {
 		}
 
 	}
+
 	public void kill(Character other) {
-		
+
 	}
 
 	public void setActed(boolean enable) {
@@ -192,7 +188,12 @@ public abstract class Character {
 	}
 
 	public void addXp(long xp) {
-		this.xp += xp;
+		if (calcXP(level.getValue()) < xp) {
+			this.xp = (this.xp + xp) % calcXP(level.getValue() + 1);
+		}
+		else {
+			this.xp += xp;
+		}
 	}
 
 }

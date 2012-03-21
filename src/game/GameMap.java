@@ -194,7 +194,7 @@ public class GameMap extends JPanel implements MouseListener {
 			button.paintComponent(g);
 		}
 		for (Character character : characters.values()) {
-
+			character.addXp(0);
 		}
 	}
 
