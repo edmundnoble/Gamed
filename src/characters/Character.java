@@ -5,24 +5,26 @@ import game.GameMap;
 import game.Item;
 import game.Weapon;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
 import utils.InventoryFullException;
-import utils.NoSuchItemException;
-import utils.OutOfMapException;
 
 public abstract class Character {
 
 	enum Save {
 		FORTITUDE, WILL, REFLEX
 	}
-
+	public long calcXP(int level) {
+		long xp = (1L >>> level) * 100;
+		return xp;
+	}
+	
+	
 	private ArrayList<Item> inventory = new ArrayList<Item>();
 	private Weapon weapon1 = Weapon.FISTS, weapon2 = null;
-	private static int MAX_INVENTORY = 20;
+	private static final int MAX_INVENTORY = 20;
 	private GameMap currentMap;
 
 	private boolean acted = false;
@@ -38,11 +40,8 @@ public abstract class Character {
 
 	private String name;
 
-	private Point location = new Point();
-
 	public Character(String name, int stre, int inte, int agil, int luc,
-			int cons, int level, Faction faction, GameMap map, int x, int y)
-			throws OutOfMapException {
+			int cons, int level, Faction faction, GameMap map) {
 
 		this.setName(name);
 		strength = new ActorValue("Strength", stre);
@@ -53,7 +52,6 @@ public abstract class Character {
 		maxHP = new ActorValue("Max HP", (level * cons) * 2);
 		currentHP = new ActorValue("HP", maxHP.getValue());
 		this.faction = faction;
-		map.putCharacter(new Point(x, y), this);
 	}
 
 	public void addToInventory(Item item) throws InventoryFullException {
@@ -62,22 +60,6 @@ public abstract class Character {
 		}
 		else {
 			inventory.add(item);
-		}
-	}
-
-	public void dropItem(Item item) throws NoSuchItemException,
-			OutOfMapException {
-		if (!inventory.contains(item)) {
-			throw new NoSuchItemException("You don't have a "
-					+ item.getName());
-		}
-		else {
-			try {
-				currentMap.putItem(location, item);
-				inventory.remove(item);
-			} catch (OutOfMapException e) {
-
-			}
 		}
 	}
 
@@ -116,10 +98,6 @@ public abstract class Character {
 
 	public ActorValue getLevel() {
 		return level;
-	}
-
-	public Point getLocation() {
-		return location;
 	}
 
 	public ActorValue getLuck() {
@@ -166,19 +144,21 @@ public abstract class Character {
 		}
 
 	}
+	public void kill(Character other) {
+		
+	}
 
 	public void setActed(boolean enable) {
 		acted = enable;
 	}
 
 	public void setAV(String name, int value) {
-
 		ActorValue[] avs =
 				{ strength, agility, constitution, intelligence, luck };
 		for (ActorValue a : avs) {
 			if (a.getName().equalsIgnoreCase(name)) {
 				a.setValue(value);
-				break;
+				return;
 			}
 		}
 	}
@@ -195,10 +175,6 @@ public abstract class Character {
 		this.level = level;
 	}
 
-	public void setLocation(Point newLoc) {
-		location = newLoc;
-	}
-
 	public void setMap(GameMap gameMap) {
 		currentMap = gameMap;
 	}
@@ -207,8 +183,16 @@ public abstract class Character {
 		this.name = name;
 	}
 
-	public void useItem(Item item) {
-		item.use(this);
+	public void useItem(Character actor, Item item) {
+		item.use(actor);
+	}
+
+	public long getXp() {
+		return xp;
+	}
+
+	public void addXp(long xp) {
+		this.xp += xp;
 	}
 
 }

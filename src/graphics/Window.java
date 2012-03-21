@@ -4,6 +4,7 @@ package graphics;
 import game.GameMap;
 
 import java.awt.EventQueue;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -15,13 +16,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
 import utils.OutOfMapException;
+import characters.NPC;
 
 class GameWindow extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 3854950048874492L;
 
 	public static final int DEFAULT_WIDTH = 1000, DEFAULT_HEIGHT = 600;
-	private JPanel gameMap = new GameMap();
+	private GameMap gameMap = new GameMap();
 	private final JMenuBar dropDown = new JMenuBar();
 	private final JMenu file = new JMenu("File"),
 			save = new JMenu("Save"), load = new JMenu("Save");
@@ -44,6 +46,13 @@ class GameWindow extends JFrame implements ActionListener {
 		gamePanel.setVisible(false);
 		overPanel.setVisible(true);
 		// gamePanel.add(gameMap);
+		try {
+			gameMap.putCharacter(new Point(1, 1), new NPC("Test", 1, 1, 1,
+					1, 1, 1, gameMap));
+		} catch (OutOfMapException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public GameWindow() {

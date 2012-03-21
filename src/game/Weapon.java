@@ -1,23 +1,25 @@
 
+
 package game;
 
 import characters.Character;
 
-public class Weapon extends Item {
+
+public class Weapon extends Item implements Equippable {
+
+	public static enum WeaponType {
+		MELEE, RANGED
+	}
+
+	public static final Weapon FISTS = new Weapon("Fists", 1, 0, WeaponType.MELEE);
+
+	private int clipSize = -1;
 
 	private double damage;
-	public static final Weapon FISTS = new Weapon("Fists", 1, 0,
-			WeaponType.MELEE);
 
-	public enum WeaponType {
-		SHOTGUN, SNIPER, RIFLE, MELEE
-	}
+	private int maxRange = 1;
 
-	public Weapon(String name, int dmg, int cost, WeaponType type) {
-		super(name, cost);
-		this.damage = dmg;
-		this.setType(type);
-	}
+	private WeaponType type;
 
 	public Weapon(String name, int dmg, int cost, int range, int clipSize,
 			WeaponType type) {
@@ -26,43 +28,50 @@ public class Weapon extends Item {
 		this.setClipSize(clipSize);
 	}
 
-	private int clipSize = -1;
-	private int maxRange = 1;
-	private WeaponType type;
-
-	@Override
-	public void use(Character actor) {
-		for (Weapon weapon : actor.getEquippedWeapons()) {
-			if (weapon.equals(this)) {
-				return;
-			}
-			else {
-				actor.equip(this);
-			}
-		}
+	public Weapon(String name, int dmg, int cost, WeaponType type) {
+		super(name, cost);
+		this.damage = dmg;
+		this.setType(type);
 	}
 
-	public WeaponType getType() {
-		return type;
-	}
+	@ Override
+	public void equip(Character character) {
+		// TODO Auto-generated method stub
 
-	public void setType(WeaponType type) {
-		this.type = type;
-	}
-
-	public int getMaxRange() {
-		return maxRange;
-	}
-
-	public void setMaxRange(int maxRange) {
-		this.maxRange = maxRange;
 	}
 
 	public int getClipSize() {
 		return clipSize;
 	}
 
+	public int getMaxRange() {
+		return maxRange;
+	}
+
+	public WeaponType getType() {
+		return type;
+	}
+
 	public void setClipSize(int clipSize) {
 		this.clipSize = clipSize;
+	}
+
+	public void setMaxRange(int maxRange) {
+		this.maxRange = maxRange;
+	}
+
+	public void setType(WeaponType type) {
+		this.type = type;
+	}
+
+	@ Override
+	public void use(Character actor) {
+		for (Weapon weapon : actor.getEquippedWeapons()) {
+			if (weapon.equals(this)) {
+				return;
+			} else {
+				equip(actor);
+			}
+		}
 	}
 }
