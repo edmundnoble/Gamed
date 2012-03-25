@@ -8,7 +8,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -23,7 +22,8 @@ public class GameMap extends JPanel implements MouseListener {
 
 	private static final long serialVersionUID = -2286832497356572097L;
 
-	public static Image tileImage, brightTileImage, character1;
+	public static Image tileImage, brightTileImage, redTileImage,
+			character1;
 
 	// g.drawImage(img, w, h, null);
 	private HashMap<Point, TileButton> buttons =
@@ -38,6 +38,10 @@ public class GameMap extends JPanel implements MouseListener {
 	public final HashMap<Point, Item> items = new HashMap<Point, Item>();
 	private Character selectedCharacter = null;
 	private int tilesX = 8, tilesY = 10;
+	private TileButton lastPressedButton = null;
+
+	private static final int DEFAULT_HEIGHT_TEXTPANEL = 500,
+			DEFAULT_WIDTH_TEXTPANEL = 500;
 
 	public GameMap() {
 		super();
@@ -52,6 +56,8 @@ public class GameMap extends JPanel implements MouseListener {
 			brightTileImage = ImageIO.read(input);
 			input = classLoader.getResourceAsStream("char1.png");
 			character1 = ImageIO.read(input);
+			input = classLoader.getResourceAsStream("tile_red.png");
+			redTileImage = ImageIO.read(input);
 			input.close();
 			input = null;
 		} catch (IOException e) {
@@ -150,17 +156,21 @@ public class GameMap extends JPanel implements MouseListener {
 		 * buttons) { Rectangle2D rect = new Rectangle2D.Double(button.getX(),
 		 * button.getY(), button.getWidth(), button.getHeight()); if
 		 * (rect.contains(e.getPoint()))
-		 */{
-			TileButton button = containerButton(e.getPoint());
-			button.press(true);
-			System.out.print("Button " + "("
-					+ (button.getX() / button.getWidth() + 1) + ","
-					+ (button.getY() / button.getHeight() + 1)
-					+ ") pressed.\n Pressed is " + button.isPressed()
-					+ ".\n");
-
+		 */
+		TileButton button = containerButton(e.getPoint());
+		if (isEdgeButton(button)) {
+			button.pressRed(true);
 		}
+		else {
+			button.press(true);
+		}
+		System.out.print("Button " + "("
+				+ (button.getX() / button.getWidth() + 1) + ","
+				+ (button.getY() / button.getHeight() + 1)
+				+ ") pressed.\n Pressed is " + button.isPressed() + ".\n");
+		lastPressedButton = button;
 		paintComponent(getGraphics());
+		paintCharacters(getGraphics());
 	}
 
 	@Override
@@ -172,20 +182,30 @@ public class GameMap extends JPanel implements MouseListener {
 		 * button.getY(), button.getWidth(), button.getHeight()); if
 		 * (rect.contains(e.getPoint())) {
 		 */
+		if (lastPressedButton == null) {
+			return;
+		}
 		for (TileButton button : buttons.values()) {
 			button.press(false);
-			Rectangle2D rect =
-					new Rectangle2D.Double(button.getX(), button.getY(),
-							button.getWidth(), button.getHeight());
-			if (rect.contains(e.getPoint())) {
-				System.out.println("("
-						+ (button.getX() / button.getWidth() + 1) + ","
-						+ (button.getY() / button.getHeight() + 1)
-						+ ") released. Entered is " + button.isPressed());
-			}
+			button.pressRed(false);
 		}
-
+		System.out
+				.println("("
+						+ (lastPressedButton.getX()
+								/ lastPressedButton.getWidth() + 1)
+						+ ","
+						+ (lastPressedButton.getY()
+								/ lastPressedButton.getHeight() + 1)
+						+ ") released. Entered is "
+						+ lastPressedButton.isPressed());
 		paintComponent(getGraphics());
+		lastPressedButton = null;
+		mouseReleased(e);
+	}
+
+	private void paintCharacters(Graphics graphics) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -253,7 +273,4 @@ public class GameMap extends JPanel implements MouseListener {
 		textPanel.setSize(DEFAULT_HEIGHT_TEXTPANEL,
 				DEFAULT_WIDTH_TEXTPANEL);
 	}
-
-	private static final int DEFAULT_HEIGHT_TEXTPANEL = 500,
-			DEFAULT_WIDTH_TEXTPANEL = 500;
 }

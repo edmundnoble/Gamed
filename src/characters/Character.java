@@ -17,16 +17,13 @@ public abstract class Character {
 		FORTITUDE, WILL, REFLEX
 	}
 
-	public long calcXP(int level) {
-		long xp = (1L >>> level) * 100;
-		return xp;
-	}
+	private CharacterModel model;
 
 	private ArrayList<Item> inventory = new ArrayList<Item>();
+
 	private Weapon weapon1 = Weapon.FISTS, weapon2 = null;
 	private static final int MAX_INVENTORY = 20;
 	private GameMap currentMap;
-
 	private boolean acted = false;
 
 	public static final int MAXPARTYMEMBERS = 4;
@@ -42,8 +39,8 @@ public abstract class Character {
 
 	public Character(String name, int stre, int inte, int agil, int luc,
 			int cons, int level, Faction faction, GameMap map) {
-
-		this.setName(name);
+		model = new CharacterModel(name);
+		this.name = name;
 		strength = new ActorValue("Strength", stre);
 		intelligence = new ActorValue("Intelligence", inte);
 		agility = new ActorValue("Agility", agil);
@@ -61,6 +58,20 @@ public abstract class Character {
 		else {
 			inventory.add(item);
 		}
+	}
+
+	public void addXp(long xp) {
+		if (calcXP(level.getValue()) < this.xp + xp) {
+			this.xp = (this.xp + xp) % calcXP(level.getValue() + 1);
+		}
+		else {
+			this.xp += xp;
+		}
+	}
+
+	public long calcXP(int level) {
+		long xp = (1L >>> level) * 100;
+		return xp;
 	}
 
 	public void equip(Item item) {
@@ -120,8 +131,16 @@ public abstract class Character {
 		return strength;
 	}
 
+	public long getXp() {
+		return xp;
+	}
+
 	public boolean hasActed() {
 		return acted;
+	}
+
+	public void kill(Character other) {
+
 	}
 
 	public boolean makeSave(Save type, int DC) {
@@ -137,10 +156,6 @@ public abstract class Character {
 		else {
 			inventory.add(item);
 		}
-
-	}
-
-	public void kill(Character other) {
 
 	}
 
@@ -175,25 +190,8 @@ public abstract class Character {
 		currentMap = gameMap;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public void useItem(Character actor, Item item) {
 		item.use(actor);
-	}
-
-	public long getXp() {
-		return xp;
-	}
-
-	public void addXp(long xp) {
-		if (calcXP(level.getValue()) < xp) {
-			this.xp = (this.xp + xp) % calcXP(level.getValue() + 1);
-		}
-		else {
-			this.xp += xp;
-		}
 	}
 
 }

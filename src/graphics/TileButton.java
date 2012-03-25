@@ -19,9 +19,10 @@ public class TileButton extends JComponent {
 	private int h;
 
 	private Image image = GameMap.tileImage,
-			brightImage = GameMap.brightTileImage;
+			brightImage = GameMap.brightTileImage,
+			redImage = GameMap.redTileImage;
 
-	private boolean pressed = false;
+	private boolean pressed = false, redPressed = false;
 
 	public TileButton(int x, int y) throws HeadlessException {
 		super();
@@ -37,9 +38,16 @@ public class TileButton extends JComponent {
 		return pressed;
 	}
 
+	public boolean isRed() {
+		return redPressed;
+	}
+
 	@Override
 	public void paintComponent(Graphics g) {
-		if (pressed) {
+		if (redPressed) {
+			g.drawImage(redImage, x, y, this);
+		}
+		else if (pressed) {
 			g.drawImage(brightImage, x, y, this);
 		}
 		else {
@@ -50,6 +58,10 @@ public class TileButton extends JComponent {
 
 	public void press(boolean enable) {
 		pressed = enable;
+	}
+
+	public void pressRed(boolean enable) {
+		redPressed = enable;
 	}
 
 }
