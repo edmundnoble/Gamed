@@ -16,7 +16,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
 import utils.OutOfMapException;
-import characters.CharacterModel;
 import characters.NPC;
 
 class GameWindow extends JFrame implements ActionListener {
@@ -58,7 +57,7 @@ class GameWindow extends JFrame implements ActionListener {
 
 	public GameWindow() {
 		setTitle("Game: The Game");
-		CharacterModel model = new CharacterModel("default");
+		// CharacterModel model = new CharacterModel("default");
 		// pack();
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		// add(gamePanel);

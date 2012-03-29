@@ -11,6 +11,7 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -26,18 +27,19 @@ public class GameMap extends JPanel implements MouseListener {
 			character1;
 
 	// g.drawImage(img, w, h, null);
-	private HashMap<Point, TileButton> buttons =
-			new HashMap<Point, TileButton>();
+	private Hashtable<Point, TileButton> buttons =
+			new Hashtable<Point, TileButton>();
 
 	public final HashMap<Point, Character> characters =
 			new HashMap<Point, Character>();
 
-	int imageHeight;
-
-	int imageWidth;
 	public final HashMap<Point, Item> items = new HashMap<Point, Item>();
+
+	int imageHeight;
+	int imageWidth;
+	private static final int tilesX = 8, tilesY = 10;
+
 	private Character selectedCharacter = null;
-	private int tilesX = 8, tilesY = 10;
 	private TileButton lastPressedButton = null;
 
 	private static final int DEFAULT_HEIGHT_TEXTPANEL = 500,
@@ -45,21 +47,12 @@ public class GameMap extends JPanel implements MouseListener {
 
 	public GameMap() {
 		super();
-		ClassLoader classLoader =
-				Thread.currentThread().getContextClassLoader();
-
+		setLocation(50, 50);
 		try {
-			InputStream input =
-					classLoader.getResourceAsStream("tile.png");
-			tileImage = ImageIO.read(input);
-			input = classLoader.getResourceAsStream("bright_tile.png");
-			brightTileImage = ImageIO.read(input);
-			input = classLoader.getResourceAsStream("char1.png");
-			character1 = ImageIO.read(input);
-			input = classLoader.getResourceAsStream("tile_red.png");
-			redTileImage = ImageIO.read(input);
-			input.close();
-			input = null;
+			tileImage = loadImage("tile.png");
+			brightTileImage = loadImage("bright_tile.png");
+			redTileImage = loadImage("tile_red.png");
+			character1 = loadImage("char1.png");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -170,7 +163,6 @@ public class GameMap extends JPanel implements MouseListener {
 				+ ") pressed.\n Pressed is " + button.isPressed() + ".\n");
 		lastPressedButton = button;
 		paintComponent(getGraphics());
-		paintCharacters(getGraphics());
 	}
 
 	@Override
@@ -201,11 +193,6 @@ public class GameMap extends JPanel implements MouseListener {
 		paintComponent(getGraphics());
 		lastPressedButton = null;
 		mouseReleased(e);
-	}
-
-	private void paintCharacters(Graphics graphics) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -272,5 +259,13 @@ public class GameMap extends JPanel implements MouseListener {
 				(int) (getHeight() * 1.2));
 		textPanel.setSize(DEFAULT_HEIGHT_TEXTPANEL,
 				DEFAULT_WIDTH_TEXTPANEL);
+	}
+
+	public static Image loadImage(String location) throws IOException {
+		ClassLoader classLoader =
+				Thread.currentThread().getContextClassLoader();
+		InputStream input = classLoader.getResourceAsStream(location);
+		Image image = ImageIO.read(input);
+		return image;
 	}
 }

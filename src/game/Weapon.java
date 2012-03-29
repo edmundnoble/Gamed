@@ -1,17 +1,20 @@
 
-
 package game;
+
+import java.awt.Image;
 
 import characters.Character;
 
-
-public class Weapon extends Item implements Equippable {
+public class Weapon extends Item implements Usable {
 
 	public static enum WeaponType {
 		MELEE, RANGED
 	}
 
-	public static final Weapon FISTS = new Weapon("Fists", 1, 0, WeaponType.MELEE);
+	private Image weaponTexture;
+
+	public static final Weapon FISTS = new Weapon("Fists", "FISTS", 1, 0,
+			WeaponType.MELEE);
 
 	private int clipSize = -1;
 
@@ -21,23 +24,26 @@ public class Weapon extends Item implements Equippable {
 
 	private WeaponType type;
 
-	public Weapon(String name, int dmg, int cost, int range, int clipSize,
-			WeaponType type) {
-		this(name, dmg, cost, type);
-		setMaxRange(range);
-		this.setClipSize(clipSize);
+	private Image texture;
+
+	public Weapon(String name, String baseName, int dmg, int cost,
+			int range, int clipSize, WeaponType type) {
+		this(name, baseName, dmg, cost, type);
+		this.maxRange = range;
+		this.clipSize = clipSize;
+		loadTextures(name);
 	}
 
-	public Weapon(String name, int dmg, int cost, WeaponType type) {
-		super(name, cost);
-		this.damage = dmg;
-		this.setType(type);
-	}
-
-	@ Override
-	public void equip(Character character) {
+	private void loadTextures(String name) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public Weapon(String name, String baseName, int dmg, int cost,
+			WeaponType type) {
+		super(baseName, cost);
+		this.damage = dmg;
+		this.setType(type);
 	}
 
 	public int getClipSize() {
@@ -64,14 +70,19 @@ public class Weapon extends Item implements Equippable {
 		this.type = type;
 	}
 
-	@ Override
+	@Override
 	public void use(Character actor) {
 		for (Weapon weapon : actor.getEquippedWeapons()) {
 			if (weapon.equals(this)) {
 				return;
-			} else {
-				equip(actor);
+			}
+			else {
+				use(actor);
 			}
 		}
+	}
+
+	public void equip(Character actor) {
+
 	}
 }
