@@ -1,4 +1,5 @@
 
+
 package graphics;
 
 import game.GameMap;
@@ -9,20 +10,20 @@ import java.awt.Image;
 
 import javax.swing.JComponent;
 
+
 public class TileButton extends JComponent {
 
 	private static final long serialVersionUID = -1789637952468141155L;
 
-	private int x;
-	private int y;
-	private int w;
 	private int h;
-
-	private Image image = GameMap.tileImage,
-			brightImage = GameMap.brightTileImage,
+	private Image image = GameMap.tileImage, brightImage = GameMap.brightTileImage,
 			redImage = GameMap.redTileImage;
-
 	private boolean pressed = false, redPressed = false;
+	private int w;
+
+	private int x;
+
+	private int y;
 
 	public TileButton(int x, int y) throws HeadlessException {
 		super();
@@ -42,15 +43,13 @@ public class TileButton extends JComponent {
 		return redPressed;
 	}
 
-	@Override
+	@ Override
 	public void paintComponent(Graphics g) {
 		if (redPressed) {
 			g.drawImage(redImage, x, y, this);
-		}
-		else if (pressed) {
+		} else if (pressed) {
 			g.drawImage(brightImage, x, y, this);
-		}
-		else {
+		} else {
 			g.drawImage(image, x, y, this);
 		}
 

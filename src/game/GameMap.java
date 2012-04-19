@@ -3,61 +3,93 @@ package game;
 
 import graphics.TileButton;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Hashtable;
 
-import javax.imageio.ImageIO;
+import javax.imageio.IIOException;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
+import utils.ImageUtils;
 import utils.OutOfMapException;
 import characters.Character;
+import characters.NPC;
 
-public class GameMap extends JPanel implements MouseListener {
+public class GameMap extends JPanel implements MouseListener,
+		ActionListener {
+
+	private static final int DEFAULT_HEIGHT_TEXTPANEL = 500,
+			DEFAULT_WIDTH_TEXTPANEL = 500;
+
+	private static final int FPS = 45;
 
 	private static final long serialVersionUID = -2286832497356572097L;
 
 	public static Image tileImage, brightTileImage, redTileImage,
 			character1;
 
+	private static final int tilesX = 10, tilesY = 10;
+
+	public static void Log(String str) {
+		System.out.println(str);
+	}
+
 	// g.drawImage(img, w, h, null);
 	private Hashtable<Point, TileButton> buttons =
 			new Hashtable<Point, TileButton>();
-
 	public final HashMap<Point, Character> characters =
 			new HashMap<Point, Character>();
+	int imageHeight;
 
+	int imageWidth;
 	public final HashMap<Point, Item> items = new HashMap<Point, Item>();
 
-	int imageHeight;
-	int imageWidth;
-	private static final int tilesX = 8, tilesY = 10;
-
-	private Character selectedCharacter = null;
 	private TileButton lastPressedButton = null;
 
-	private static final int DEFAULT_HEIGHT_TEXTPANEL = 500,
-			DEFAULT_WIDTH_TEXTPANEL = 500;
+	Timer renderTimer;
+
+	private Character selectedCharacter = null;
 
 	public GameMap() {
 		super();
-		setLocation(50, 50);
+		renderTimer = new Timer(1000 / FPS, this);
+		setLocation(10, 10);
 		try {
-			tileImage = loadImage("tile.png");
-			brightTileImage = loadImage("bright_tile.png");
-			redTileImage = loadImage("tile_red.png");
-			character1 = loadImage("char1.png");
+			tileImage = ImageUtils.loadImage("tile.png");
+			brightTileImage = ImageUtils.loadImage("bright_tile.png");
+			redTileImage = ImageUtils.loadImage("tile_red.png");
+			character1 = ImageUtils.loadImage("char1.png");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		assert tileImage.getHeight(this) == brightTileImage
-				.getHeight(this) && tileImage.getHeight(this) == 50;
+		try {
+			boolean valid =
+					tileImage.getHeight(this) == brightTileImage
+							.getHeight(this)
+							&& tileImage.getHeight(this) == redTileImage
+									.getHeight(this)
+							&& tileImage.getHeight(null) == tileImage
+									.getWidth(null)
+							&& brightTileImage.getWidth(null) == redTileImage
+									.getWidth(null)
+							&& brightTileImage.getWidth(null) == tileImage
+									.getHeight(null);
+			if (!valid) {
+				throw new IIOException(
+						"Tile images have invalid dimensions!");
+			}
+		} catch (IIOException iioe) {
+			iioe.printStackTrace();
+		}
 		enableInputMethods(true);
 		addMouseListener(this);
 		imageWidth = brightTileImage.getWidth(this);
@@ -72,6 +104,19 @@ public class GameMap extends JPanel implements MouseListener {
 		int w = tileImage.getWidth(this) * tilesX;
 		int h = tileImage.getHeight(this) * tilesY;
 		setSize(w, h);
+		setMinimumSize(new Dimension(w, h));
+		try {
+			putCharacter(new Point(1, 2), new NPC("char1", 1, 1, 1, 1, 1,
+					1, this));
+		} catch (OutOfMapException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		paintMap(getGraphics());
 	}
 
 	/**
@@ -101,11 +146,11 @@ public class GameMap extends JPanel implements MouseListener {
 		if (!buttons.containsValue(button)) {
 			return false;
 		}
-		if (button.getX() == 0 || button.getY() == 0
-				|| button.getX() == getWidth() - button.getWidth()
-				|| button.getY() == getHeight() - button.getHeight()) {
+		if (button.getX() % (button.getWidth() * (tilesX - 1)) == 0
+				|| button.getY() % (button.getHeight() * (tilesY - 1)) == 0) {
 			return true;
 		}
+
 		else {
 			return false;
 		}
@@ -139,6 +184,9 @@ public class GameMap extends JPanel implements MouseListener {
 	@Override
 	public void mouseExited(MouseEvent e) {
 		System.out.println("Gamemap exited.");
+		for (TileButton tb : buttons.values()) {
+			tb.press(false);
+		}
 
 	}
 
@@ -151,7 +199,7 @@ public class GameMap extends JPanel implements MouseListener {
 		 * (rect.contains(e.getPoint()))
 		 */
 		TileButton button = containerButton(e.getPoint());
-		if (isEdgeButton(button)) {
+		if (isEdgeButton(button) && selectedCharacter != null) {
 			button.pressRed(true);
 		}
 		else {
@@ -162,7 +210,6 @@ public class GameMap extends JPanel implements MouseListener {
 				+ (button.getY() / button.getHeight() + 1)
 				+ ") pressed.\n Pressed is " + button.isPressed() + ".\n");
 		lastPressedButton = button;
-		paintComponent(getGraphics());
 	}
 
 	@Override
@@ -190,18 +237,15 @@ public class GameMap extends JPanel implements MouseListener {
 								/ lastPressedButton.getHeight() + 1)
 						+ ") released. Entered is "
 						+ lastPressedButton.isPressed());
-		paintComponent(getGraphics());
 		lastPressedButton = null;
-		mouseReleased(e);
 	}
 
-	@Override
-	public void paintComponent(Graphics g) {
+	public void paintMap(Graphics g) {
 		for (TileButton button : this.buttons.values()) {
 			button.paintComponent(g);
 		}
 		for (Character character : characters.values()) {
-			character.addXp(0);
+			character.paintCharacter(g);
 		}
 	}
 
@@ -261,11 +305,14 @@ public class GameMap extends JPanel implements MouseListener {
 				DEFAULT_WIDTH_TEXTPANEL);
 	}
 
-	public static Image loadImage(String location) throws IOException {
-		ClassLoader classLoader =
-				Thread.currentThread().getContextClassLoader();
-		InputStream input = classLoader.getResourceAsStream(location);
-		Image image = ImageIO.read(input);
-		return image;
+	@Override
+	public void setVisible(boolean enable) {
+		super.setVisible(enable);
+		if (enable) {
+			renderTimer.start();
+		}
+		else {
+			renderTimer.stop();
+		}
 	}
 }
