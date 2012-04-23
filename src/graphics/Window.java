@@ -20,7 +20,7 @@ class GameWindow extends JFrame implements ActionListener {
 
 	public static final int DEFAULT_WIDTH = 1000, DEFAULT_HEIGHT = 600;
 
-	private static final long serialVersionUID = 3854950048874492L;
+	private static final long serialVersionUID = -3854950048874492L;
 	private final JMenuBar dropDown = new JMenuBar();
 	private final JMenu file = new JMenu("File"),
 			save = new JMenu("Save"), load = new JMenu("Save");
@@ -57,6 +57,7 @@ class GameWindow extends JFrame implements ActionListener {
 		gameMap.setVisible(false);
 		startMenu.setVisible(true);
 		add(startMenu);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 	}
 

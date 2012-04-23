@@ -12,17 +12,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.Hashtable;
 
 import javax.imageio.IIOException;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import utils.CustomHashtable;
 import utils.ImageUtils;
 import utils.OutOfMapException;
 import characters.Character;
-import characters.NPC;
+import characters.Player;
 
 public class GameMap extends JPanel implements MouseListener,
 		ActionListener {
@@ -30,7 +31,7 @@ public class GameMap extends JPanel implements MouseListener,
 	private static final int DEFAULT_HEIGHT_TEXTPANEL = 500,
 			DEFAULT_WIDTH_TEXTPANEL = 500;
 
-	private static final int FPS = 45;
+	private static final int FPS = 10;
 
 	private static final long serialVersionUID = -2286832497356572097L;
 
@@ -44,16 +45,18 @@ public class GameMap extends JPanel implements MouseListener,
 	}
 
 	// g.drawImage(img, w, h, null);
-	private Hashtable<Point, TileButton> buttons =
-			new Hashtable<Point, TileButton>();
-	public final HashMap<Point, Character> characters =
-			new HashMap<Point, Character>();
+	private CustomHashtable<Point, TileButton> buttons =
+			new CustomHashtable<Point, TileButton>();
+	public final CustomHashtable<Point, Character> characters =
+			new CustomHashtable<Point, Character>();
 	int imageHeight;
-
 	int imageWidth;
-	public final HashMap<Point, Item> items = new HashMap<Point, Item>();
+	public final Hashtable<Point, Item> items =
+			new Hashtable<Point, Item>();
 
 	private TileButton lastPressedButton = null;
+
+	private Date pressedTime = new Date();
 
 	Timer renderTimer;
 
@@ -67,7 +70,6 @@ public class GameMap extends JPanel implements MouseListener,
 			tileImage = ImageUtils.loadImage("tile.png");
 			brightTileImage = ImageUtils.loadImage("bright_tile.png");
 			redTileImage = ImageUtils.loadImage("tile_red.png");
-			character1 = ImageUtils.loadImage("char1.png");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -106,8 +108,10 @@ public class GameMap extends JPanel implements MouseListener,
 		setSize(w, h);
 		setMinimumSize(new Dimension(w, h));
 		try {
-			putCharacter(new Point(1, 2), new NPC("char1", 1, 1, 1, 1, 1,
-					1, this));
+			putCharacter(new Point(2, 3), new Player("char1", 1, 1, 1, 1,
+					1, 1, this));
+			putCharacter(new Point(2, 3), new Player("char1", 1, 1, 1, 1,
+					1, 1, this));
 		} catch (OutOfMapException e) {
 			e.printStackTrace();
 		}
@@ -129,11 +133,11 @@ public class GameMap extends JPanel implements MouseListener,
 		return buttons.get(newPoint);
 	}
 
-	public HashMap<Point, Character> getActors() {
+	public Hashtable<Point, Character> getActors() {
 		return characters;
 	}
 
-	public HashMap<Point, Item> getItems() {
+	public Hashtable<Point, Item> getItems() {
 		return items;
 	}
 
@@ -158,51 +162,74 @@ public class GameMap extends JPanel implements MouseListener,
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (characters.isEmpty()) {
-			System.out.println("no characters yet.");
-		}
-		else if (characters.get(e.getPoint()) != null) {
-			selectedCharacter = characters.get(e.getPoint());
-		}
 		TileButton button = containerButton(e.getPoint());
+		int x = button.getX() / button.getWidth() + 1, y =
+				button.getY() / button.getHeight() + 1;
+		Point xy = new Point(x, y);
+		if (selectedCharacter == null
+				&& !(characters.get(xy) instanceof Player)) {
+			return;
+		}/*
+		 * if (selectedCharacter != null &&
+		 * !(selectedCharacter.equals(characters.get(xy)))) { Point key =
+		 * characters.keyOf(selectedCharacter); if (Math.abs(key.x - x) +
+		 * Math.abs(key.y - y) == 1) { characters.put(xy,
+		 * characters.remove(characters .keyOf(selectedCharacter))); } }
+		 */
+		if (selectedCharacter != null) {
+			if (characters.get(xy) == null) {
+				Point key = characters.keyOf(selectedCharacter);
+				if (Math.abs(key.x - x) + Math.abs(key.y - y) == 1) {
+					characters.put(xy, characters.remove(characters
+							.keyOf(selectedCharacter)));
+				}
+			}
+			else {
+				selectedCharacter = characters.get(xy);
+			}
+		}
+		else if (characters.get(xy) != null) {
+			selectedCharacter = characters.get(xy);
+		}
+
 		if (!isEdgeButton(button)) {
 			System.out.println("Not an edge button.");
 		}
 		else {
 			System.out.println("Is an edge button.");
 		}
+		if (characters.get(e.getPoint()) != null) {
+			selectedCharacter = characters.get(e.getPoint());
+		}
+		paintMap(getGraphics());
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if (contains(e.getPoint())) {
-			System.out.println("Gamemap entered.");
-			// TODO Auto-generated method stub
-		}
+		System.out.println("Gamemap entered.");
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		System.out.println("Gamemap exited.");
-		for (TileButton tb : buttons.values()) {
-			tb.press(false);
-		}
 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		/*
-		 * for (TileButton[] buttons : this.buttons) { for (TileButton button :
-		 * buttons) { Rectangle2D rect = new Rectangle2D.Double(button.getX(),
-		 * button.getY(), button.getWidth(), button.getHeight()); if
-		 * (rect.contains(e.getPoint()))
-		 */
+		pressedTime = new Date();
 		TileButton button = containerButton(e.getPoint());
-		if (isEdgeButton(button) && selectedCharacter != null) {
+		int x = button.getX() / button.getWidth() + 1, y =
+				button.getY() / button.getHeight() + 1;
+		Point xy = new Point(x, y);
+		if (selectedCharacter == null && characters.get(xy) != null) {
+			button.press(true);
+		}
+		else if (isEdgeButton(button) && selectedCharacter != null) {
 			button.pressRed(true);
 		}
-		else {
+		else if (selectedCharacter != null) {
 			button.press(true);
 		}
 		System.out.print("Button " + "("
@@ -210,10 +237,14 @@ public class GameMap extends JPanel implements MouseListener,
 				+ (button.getY() / button.getHeight() + 1)
 				+ ") pressed.\n Pressed is " + button.isPressed() + ".\n");
 		lastPressedButton = button;
+		paintMap(getGraphics());
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		if (new Date().getTime() - pressedTime.getTime() > 900) {
+			mouseClicked(e);
+		}
 		// TODO Auto-generated method stub
 		/*
 		 * for (TileButton[] buttons : this.buttons) { for (TileButton button :
@@ -238,6 +269,7 @@ public class GameMap extends JPanel implements MouseListener,
 						+ ") released. Entered is "
 						+ lastPressedButton.isPressed());
 		lastPressedButton = null;
+		paintMap(getGraphics());
 	}
 
 	public void paintMap(Graphics g) {
@@ -245,7 +277,7 @@ public class GameMap extends JPanel implements MouseListener,
 			button.paintComponent(g);
 		}
 		for (Character character : characters.values()) {
-			character.paintCharacter(g);
+			character.paintCharacter(g, characters.keyOf(character));
 		}
 	}
 

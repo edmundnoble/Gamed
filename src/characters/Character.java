@@ -9,6 +9,7 @@ import game.Weapon;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class Character {
 		FORTITUDE, REFLEX, WILL
 	}
 
-	private static final int BODY_PARTS = 4;
+	private static final int BODY_PARTS = 3;
 	public static final int GREEN = 0, BLUE = 1, RED = 2;
 	private static final int MAX_INVENTORY = 20;
 	public static final int MAXPARTYMEMBERS = 4;
@@ -85,16 +86,24 @@ public class Character {
 	}
 
 	private Image assembleImages(Hashtable<String, Image> table) {
-		// if (table.size() != BODY_PARTS) {
-		// throw new IllegalArgumentException(
-		// table.size() > BODY_PARTS ? "Too many images!"
-		// : "Not enough images!");
-		// }
+		if (table.size() != BODY_PARTS) {
+			throw new IllegalArgumentException(
+					table.size() > BODY_PARTS ? "Too many images!"
+							: "Not enough images!");
+		}
 		BufferedImage finalImage =
 				new BufferedImage(50, 50, BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D graphics = finalImage.createGraphics();
-		graphics.drawImage(table.get("HEAD"), 10, 10, null);
+		Image head = table.get("HEAD"), arms = table.get("ARMS"), body =
+				table.get("BODY");
+		graphics.drawImage(head, 10, 5, null);
+		graphics.drawImage(arms, 10, 5, null);
+		graphics.drawImage(body, 10, 5, null);
 		return finalImage;
+	}
+
+	public void attack(Character other) {
+
 	}
 
 	public long calcXP(int level) {
@@ -112,12 +121,12 @@ public class Character {
 
 	public ActorValue getCon() {
 		return constitution;
-	}
+	};;
 
 	public Weapon[] getEquippedWeapons() {
 		Weapon[] weapons = { weapon1, weapon2 };
 		return weapons;
-	};;
+	}
 
 	public Faction getFaction() {
 		return faction;
@@ -171,17 +180,12 @@ public class Character {
 		return acted;
 	}
 
-	public void kill(Character other) {
-
-	}
-
 	public Hashtable<String, Image> loadImages(String name) {
 		Image currentArms, currentBody, currentHead;
 		String imageLoc = name + "_";
 		String headLoc = imageLoc + "head.png", armsLoc =
 				imageLoc + "arms.png", bodyLoc = imageLoc + "body.png";
 		try {
-			currentArms = ImageUtils.loadImage("char1_head.png");
 			currentArms = ImageUtils.loadImage(armsLoc);
 			currentBody = ImageUtils.loadImage(bodyLoc);
 			currentHead = ImageUtils.loadImage(headLoc);
@@ -204,8 +208,9 @@ public class Character {
 		return (result > DC);
 	}
 
-	public void paintCharacter(Graphics g) {
-		g.drawImage(fullImage, 1, 1, null);
+	public void paintCharacter(Graphics g, Point location) {
+		g.drawImage(fullImage, (location.x - 1) * 50,
+				(location.y - 1) * 50, null);
 	}
 
 	public void pickup(Item item) {
